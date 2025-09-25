@@ -1,0 +1,30 @@
+{
+  "songInfo": {
+    "title": "テスト楽曲",
+    "artist": "Sample Artist",
+    "audioFile": "test.mp3",
+    "audioOffset": -0.17,
+    "emptyMeasures": 1,
+    "volume": 0.3,
+    "difficulty": "Normal",
+    "level": 5
+  },
+  "timingPoints": [
+    {"measure": 1, "beat": 0, "bpm": 160, "timeSignature": [4, 4]}
+  ],
+  "notes": [
+    {"measure": 1, "beat": 0.0, "lane": 0, "type": "hold", "duration": 3.0},
+    {"measure": 1, "beat": 0.0, "lane": 5, "type": "tap"},
+    {"measure": 1, "beat": 1.0, "lane": 4, "type": "tap"},
+    {"measure": 1, "beat": 1.333, "lane": 1, "type": "tap"},
+    {"measure": 1, "beat": 1.667, "lane": 2, "type": "tap"},
+    {"measure": 1, "beat": 2.0, "lane": 3, "type": "tap"},
+    {"measure": 1, "beat": 3.0, "lane": 2, "type": "tap"},
+    {"measure": 1, "beat": 3.0, "lane": 5, "type": "tap"},
+    {"measure": 2, "beat": 0.0, "lane": 0, "type": "tap"},
+    {"measure": 2, "beat": 1.0, "lane": 4, "type": "tap"},
+    {"measure": 2, "beat": 1.0, "lane": 5, "type": "tap"},
+    {"measure": 2, "beat": 2.0, "lane": 2, "type": "tap"},
+    {"measure": 2, "beat": 2.0, "lane": 3, "type": "hold", "duration": 3.0}
+  ]
+}

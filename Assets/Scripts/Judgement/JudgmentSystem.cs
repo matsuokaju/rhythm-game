@@ -90,7 +90,7 @@ public class JudgmentSystem : MonoBehaviour
     {
         var laneNotes = noteManager.ActiveNotes
             .Where(note => note.lane == laneIndex && note.gameObject != null)
-            .OrderBy(note => Mathf.Abs(note.hitTime - gameController.SongTime))
+            .OrderBy(note => Mathf.Abs(note.hitTime - (gameController.SongTime + gameController.JudgmentOffset)))
             .ToList();
 
         if (debugMode)
@@ -104,13 +104,14 @@ public class JudgmentSystem : MonoBehaviour
 
         ActiveNote closestNote = laneNotes[0];
 
-        float timeDifference = closestNote.hitTime - gameController.SongTime;
+        float adjustedSongTime = gameController.SongTime + gameController.JudgmentOffset;
+        float timeDifference = closestNote.hitTime - adjustedSongTime;
         float timeDifferenceMs = Mathf.Abs(timeDifference) * 1000f;
 
         if (debugMode)
         {
             float currentZ = closestNote.gameObject.transform.position.z;
-            Debug.Log($"Hit Check - Lane={laneIndex} NoteHitTime={closestNote.hitTime:F3} SongTime={gameController.SongTime:F3} Diff={timeDifference * 1000f:F1}ms Position={closestNote.position} NoteZ={currentZ:F2}");
+            Debug.Log($"Hit Check - Lane={laneIndex} NoteHitTime={closestNote.hitTime:F3} SongTime={gameController.SongTime:F3} Offset={gameController.JudgmentOffset:F3} Adjusted={adjustedSongTime:F3} Diff={timeDifference * 1000f:F1}ms Position={closestNote.position} NoteZ={currentZ:F2}");
         }
 
         JudgmentResult judgment = GetJudgment(timeDifferenceMs);
@@ -262,6 +263,8 @@ public class JudgmentSystem : MonoBehaviour
 
     public void CheckMissedNotes(float songTime)
     {
+        float adjustedSongTime = songTime + gameController.JudgmentOffset;
+
         for (int i = noteManager.ActiveNotes.Count - 1; i >= 0; i--)
         {
             ActiveNote note = noteManager.ActiveNotes[i];
@@ -274,7 +277,7 @@ public class JudgmentSystem : MonoBehaviour
             // ★ ホールドノートはオートミス対象外（HoldNoteController内で管理）
             if (note.type == "hold") continue;
 
-            float timeDifference = songTime - note.hitTime;
+            float timeDifference = adjustedSongTime - note.hitTime;
             float timeDifferenceMs = timeDifference * 1000f;
 
             if (timeDifferenceMs > missTiming)

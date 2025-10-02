@@ -94,7 +94,8 @@ public class GameUI : MonoBehaviour
         // 判定タイミング表示も精密に
         GUI.Label(new Rect(10, 370, 400, 30), $"Perfect: ±{judgmentSystem.perfectTiming:F2}ms, Good: ±{judgmentSystem.goodTiming:F2}ms", style);
         GUI.Label(new Rect(10, 400, 400, 30), $"Bad: ±{judgmentSystem.badTiming:F2}ms, Miss: ±{judgmentSystem.missTiming:F2}ms", style);
-        GUI.Label(new Rect(10, 430, 400, 30), "Press SPACE to start", style);
+        GUI.Label(new Rect(10, 430, 400, 30), $"Judgment Offset: {gameController.JudgmentOffsetMs:F1}ms (↑/↓ to adjust)", style);
+        GUI.Label(new Rect(10, 460, 400, 30), "Press SPACE to start", style);
     }
 
     void DrawGameUI()
@@ -115,6 +116,9 @@ public class GameUI : MonoBehaviour
         // 現在のBPMと拍子を表示
         string timeSignatureStr = $"{chartManager.CurrentTimeSignature[0]}/{chartManager.CurrentTimeSignature[1]}";
         GUI.Label(new Rect(10, 190, 300, 30), $"BPM: {chartManager.CurrentBPM:F1}, 拍子: {timeSignatureStr}", style);
+
+        // 判定オフセット表示
+        GUI.Label(new Rect(10, 220, 300, 30), $"Offset: {gameController.JudgmentOffsetMs:F1}ms", style);
 
         // 位置表示（Y座標を調整）
         DrawPositionInfo();
@@ -139,20 +143,20 @@ public class GameUI : MonoBehaviour
             int displayMeasure = Mathf.FloorToInt(currentBeatsFromStart / currentBeatsPerMeasure) + 1;
             float displayBeat = (currentBeatsFromStart % currentBeatsPerMeasure) * (chartManager.CurrentTimeSignature[1] / 4f);
 
-            // ★ Y座標を220に調整（ホールド判定表示分のスペースを確保）
-            GUI.Label(new Rect(10, 220, 300, 30), $"Position: {displayMeasure}小節{displayBeat + 1:F2}拍", style);
+            // ★ Y座標を250に調整（オフセット表示分のスペースを確保）
+            GUI.Label(new Rect(10, 250, 300, 30), $"Position: {displayMeasure}小節{displayBeat + 1:F2}拍", style);
         }
         else
         {
             // 空白小節中の表示
-            GUI.Label(new Rect(10, 220, 300, 30), $"Empty Measures ({-adjustedTime:F2}s remaining)", style);
+            GUI.Label(new Rect(10, 250, 300, 30), $"Empty Measures ({-adjustedTime:F2}s remaining)", style);
         }
     }
 
     void DrawDebugInfo()
     {
-        // ★ Y座標を調整（250, 280に変更）
-        GUI.Label(new Rect(10, 250, 400, 30), $"Active Notes: {noteManager.ActiveNotes.Count}", style);
-        GUI.Label(new Rect(10, 280, 400, 30), $"Next Note Index: {noteManager.NextNoteIndex}/{chartManager.CurrentChart.notes.Count}", style);
+        // ★ Y座標を調整（280, 310に変更）
+        GUI.Label(new Rect(10, 280, 400, 30), $"Active Notes: {noteManager.ActiveNotes.Count}", style);
+        GUI.Label(new Rect(10, 310, 400, 30), $"Next Note Index: {noteManager.NextNoteIndex}/{chartManager.CurrentChart.notes.Count}", style);
     }
 }

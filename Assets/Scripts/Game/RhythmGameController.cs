@@ -18,9 +18,14 @@ public class RhythmGameController : MonoBehaviour
     private float songTime = 0f;
     private bool isPlaying = false;
 
+    // 判定オフセット（秒単位、内部計算用）
+    private float judgmentOffset = 0f;
+
     // プロパティ
     public bool IsPlaying => isPlaying;
     public float SongTime => songTime;
+    public float JudgmentOffset => judgmentOffset;
+    public float JudgmentOffsetMs => judgmentOffset * 1000f;
 
     void Awake()
     {
@@ -65,6 +70,16 @@ public class RhythmGameController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R) && isPlaying)
         {
             StopGame();
+        }
+
+        // 判定オフセット調整（ゲーム中でも可能）
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            AdjustJudgmentOffset(1f); // +1ms
+        }
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            AdjustJudgmentOffset(-1f); // -1ms
         }
 
         // ゲーム進行処理
@@ -133,5 +148,14 @@ public class RhythmGameController : MonoBehaviour
 
         // 結果表示
         scoreManager?.LogResults(chartManager.CurrentChart.songInfo.title);
+    }
+
+    public void AdjustJudgmentOffset(float deltaMs)
+    {
+        judgmentOffset += deltaMs / 1000f;
+        if (debugMode)
+        {
+            Debug.Log($"判定オフセット調整: {judgmentOffset * 1000f:F1}ms");
+        }
     }
 }

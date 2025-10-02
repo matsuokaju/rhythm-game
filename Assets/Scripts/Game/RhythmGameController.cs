@@ -48,7 +48,6 @@ public class RhythmGameController : MonoBehaviour
         {
             Debug.Log($"リズムゲームシステム起動: {chartManager.CurrentChart.notes.Count}ノーツ");
             Debug.Log($"楽曲: {chartManager.CurrentChart.songInfo.title} - {chartManager.CurrentChart.songInfo.artist}");
-            Debug.Log($"空白小節数: {chartManager.CurrentChart.songInfo.emptyMeasures}小節");
         }
         else
         {
@@ -114,7 +113,7 @@ public class RhythmGameController : MonoBehaviour
         float emptyTime = chartManager?.GetEmptyMeasureTime() ?? 0f;
         Debug.Log($"=== ゲーム開始 ===");
         Debug.Log($"楽曲: {chartManager.CurrentChart.songInfo.title}");
-        Debug.Log($"空白小節: {chartManager.CurrentChart.songInfo.emptyMeasures}小節 ({emptyTime:F3}秒)");
+        Debug.Log($"空白時間: {emptyTime:F3}秒");
         Debug.Log($"初期BPM: {chartManager.CurrentBPM}, 初期拍子: {chartManager.CurrentTimeSignature[0]}/{chartManager.CurrentTimeSignature[1]}");
         Debug.Log($"Audio Offset: {chartManager.CurrentChart.songInfo.audioOffset}s");
         Debug.Log($"Volume: {chartManager.CurrentChart.songInfo.volume}");

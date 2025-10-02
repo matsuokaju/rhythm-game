@@ -27,7 +27,7 @@ public class SongInfo
     public float previewTime = 0f;
     public string difficulty = "Normal";
     public int level = 1;
-    public int emptyMeasures = 1;
+    // public int emptyMeasures = 1;
 }
 
 [System.Serializable]

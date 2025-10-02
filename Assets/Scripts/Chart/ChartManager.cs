@@ -244,14 +244,17 @@ public class ChartManager : MonoBehaviour
     // 空白小節の時間を正しく計算（音価考慮）
     public float GetEmptyMeasureTime()
     {
-        if (sortedTimingPoints.Count == 0 || currentChart.songInfo.emptyMeasures <= 0) 
+        if (sortedTimingPoints.Count == 0)
             return 0f;
-        
+
+        // 固定で1小節の時間を計算
+        int fixedEmptyMeasures = 1; // 固定値
+
         float totalTime = 0f;
         float currentBPM = sortedTimingPoints[0].bpm;
         float currentBeatsPerMeasure = sortedTimingPoints[0].GetBeatsPerMeasureIn4th();
-        
-        for (int measure = 1; measure <= currentChart.songInfo.emptyMeasures; measure++)
+
+        for (int measure = 1; measure <= fixedEmptyMeasures; measure++)
         {
             // この小節でのBPM/拍子変更をチェック
             foreach (var tp in sortedTimingPoints)
@@ -263,11 +266,11 @@ public class ChartManager : MonoBehaviour
                     break;
                 }
             }
-            
+
             float secondsPerBeat = 60f / currentBPM; // 4分音符1拍の時間
             totalTime += currentBeatsPerMeasure * secondsPerBeat;
         }
-        
+
         return totalTime;
     }
 
@@ -441,7 +444,6 @@ public class ChartManager : MonoBehaviour
     {
         Debug.Log("=== 解析結果 ===");
         float emptyMeasureTime = GetEmptyMeasureTime();
-        Debug.Log($"空白小節数: {currentChart.songInfo.emptyMeasures}小節 ({emptyMeasureTime:F3}秒)");
         Debug.Log($"Audio Offset: {currentChart.songInfo.audioOffset}s");
         Debug.Log($"Audio File: {currentChart.songInfo.audioFile}");
         Debug.Log($"Volume: {currentChart.songInfo.volume}");

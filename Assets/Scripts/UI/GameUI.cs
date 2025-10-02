@@ -81,7 +81,7 @@ public class GameUI : MonoBehaviour
         GUI.Label(new Rect(10, 250, 400, 30), $"Volume: {chartManager.CurrentChart.songInfo.volume:F3}", style);
 
         float emptyTime = chartManager.GetEmptyMeasureTime();
-        GUI.Label(new Rect(10, 280, 400, 30), $"Empty Measures: {chartManager.CurrentChart.songInfo.emptyMeasures} ({emptyTime:F2}s)", style);
+        GUI.Label(new Rect(10, 280, 400, 30), $"Empty Time: {emptyTime:F2}s", style);
 
         // Audio Offset表示を小数点第3位まで精密表示
         GUI.Label(new Rect(10, 310, 400, 30), $"Audio Offset: {chartManager.CurrentChart.songInfo.audioOffset:F3}s", style);

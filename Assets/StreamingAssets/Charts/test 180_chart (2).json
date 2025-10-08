@@ -1,0 +1,239 @@
+{
+  "songInfo": {
+    "title": "test 180",
+    "artist": "Sample Artist",
+    "audioFile": "メトロノームBPM180を4小節.mp3",
+    "audioOffset": 0,
+    "totalMeasures": 6,
+    "emptyMeasures": 1,
+    "volume": 0.5,
+    "difficulty": "Normal",
+    "level": 5
+  },
+  "timingPoints": [
+    {
+      "measure": 1,
+      "beat": 0,
+      "bpm": 120,
+      "timeSignature": [
+        4,
+        4
+      ]
+    },
+    {
+      "measure": 1,
+      "beat": 0,
+      "bpm": 180,
+      "timeSignature": [
+        4,
+        4
+      ]
+    },
+    {
+      "measure": 3,
+      "beat": 0,
+      "bpm": 180,
+      "timeSignature": [
+        3,
+        4
+      ]
+    },
+    {
+      "measure": 3,
+      "beat": 0,
+      "bpm": 180,
+      "timeSignature": [
+        4,
+        4
+      ]
+    }
+  ],
+  "notes": [
+    {
+      "measure": 1,
+      "beat": 0,
+      "lane": 0,
+      "type": "hold",
+      "duration": 0.5
+    },
+    {
+      "measure": 1,
+      "beat": 1,
+      "lane": 1,
+      "type": "hold",
+      "duration": 0.25
+    },
+    {
+      "measure": 1,
+      "beat": 2,
+      "lane": 2,
+      "type": "hold",
+      "duration": 0.25
+    },
+    {
+      "measure": 1,
+      "beat": 3,
+      "lane": 3,
+      "type": "hold",
+      "duration": 0.25
+    },
+    {
+      "measure": 2,
+      "beat": 0,
+      "lane": 1,
+      "type": "hold",
+      "duration": 2
+    },
+    {
+      "measure": 2,
+      "beat": 0,
+      "lane": 4,
+      "type": "hold",
+      "duration": 2
+    },
+    {
+      "measure": 2,
+      "beat": 1,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 2,
+      "beat": 2,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 2,
+      "beat": 3,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 3,
+      "beat": 0,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 3,
+      "beat": 0,
+      "lane": 1,
+      "type": "hold",
+      "duration": 1
+    },
+    {
+      "measure": 3,
+      "beat": 0,
+      "lane": 2,
+      "type": "hold",
+      "duration": 2
+    },
+    {
+      "measure": 3,
+      "beat": 0,
+      "lane": 3,
+      "type": "hold",
+      "duration": 3
+    },
+    {
+      "measure": 3,
+      "beat": 1,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 3,
+      "beat": 2,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 3,
+      "beat": 2,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 3,
+      "beat": 3,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 3,
+      "beat": 3,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 3,
+      "beat": 3,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 4,
+      "beat": 0,
+      "lane": 2,
+      "type": "hold",
+      "duration": 3
+    },
+    {
+      "measure": 4,
+      "beat": 0,
+      "lane": 3,
+      "type": "hold",
+      "duration": 2
+    },
+    {
+      "measure": 4,
+      "beat": 0,
+      "lane": 4,
+      "type": "hold",
+      "duration": 1
+    },
+    {
+      "measure": 4,
+      "beat": 0,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 4,
+      "beat": 1,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 4,
+      "beat": 2,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 4,
+      "beat": 2,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 4,
+      "beat": 3,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 4,
+      "beat": 3,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 4,
+      "beat": 3,
+      "lane": 5,
+      "type": "tap"
+    }
+  ]
+}

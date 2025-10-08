@@ -67,6 +67,21 @@ public class RhythmGameController : MonoBehaviour
             StopGame();
         }
 
+        // タイミング調整（プレイ中のみ）
+        if (isPlaying && noteManager != null)
+        {
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                noteManager.noteTimingOffset -= 0.01f; // 10ms早く
+                Debug.Log($"タイミング調整: {noteManager.noteTimingOffset:F3}s (早く)");
+            }
+            else if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                noteManager.noteTimingOffset += 0.01f; // 10ms遅く
+                Debug.Log($"タイミング調整: {noteManager.noteTimingOffset:F3}s (遅く)");
+            }
+        }
+
         // ゲーム進行処理
         if (isPlaying)
         {
@@ -119,6 +134,10 @@ public class RhythmGameController : MonoBehaviour
         Debug.Log($"Volume: {chartManager.CurrentChart.songInfo.volume}");
         Debug.Log($"最初のノーツ到達時刻: {emptyTime:F3}s");
         Debug.Log($"音声開始予定時刻: {emptyTime + chartManager.CurrentChart.songInfo.audioOffset:F3}s");
+        Debug.Log($"=== 操作方法 ===");
+        Debug.Log($"←キー: タイミングを早く (-0.01s)");
+        Debug.Log($"→キー: タイミングを遅く (+0.01s)");
+        Debug.Log($"現在のタイミング調整: {noteManager?.noteTimingOffset:F3}s");
     }
 
     public void StopGame()

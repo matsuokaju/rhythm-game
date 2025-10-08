@@ -17,6 +17,10 @@ public class NoteManager : MonoBehaviour
     public float judgeLineZ = 0f;
     public float spawnDistance = 10f;
 
+    [Header("タイミング調整")]
+    [Tooltip("ノーツのタイミング調整 (秒)\nfastが多い時: マイナス値\nlateが多い時: プラス値")]
+    public float noteTimingOffset = 0f;
+
     public bool debugMode = true;
 
     private List<ActiveNote> activeNotes = new List<ActiveNote>();
@@ -47,6 +51,7 @@ public class NoteManager : MonoBehaviour
         if (debugMode) ValidateLanes();
         Debug.Log($"Travel time: {travelTime:F3}s, Speed: {noteSpeed}, Distance: {spawnDistance}");
         Debug.Log($"Judge Line Z: {judgeLineZ}");
+        Debug.Log($"Note Timing Offset: {noteTimingOffset:F3}s");
     }
 
     public void Initialize()
@@ -64,18 +69,19 @@ public class NoteManager : MonoBehaviour
         {
             Note note = chartManager.CurrentChart.notes[nextNoteIndex];
             float noteTime = chartManager.GetNoteTimeFromBeats(note.GetTotalBeats());
+            float adjustedNoteTime = noteTime + noteTimingOffset; // タイミング調整を適用
 
-            if (noteTime <= spawnThreshold)
+            if (adjustedNoteTime <= spawnThreshold)
             {
                 // 既にアクティブノートに存在するかチェック（重複防止）
                 bool alreadyExists = activeNotes.Any(activeNote =>
-                    activeNote.hitTime == noteTime &&
+                    activeNote.hitTime == adjustedNoteTime &&
                     activeNote.lane == note.lane &&
                     activeNote.type == note.type);
 
                 if (!alreadyExists)
                 {
-                    bool success = SpawnNote(note, noteTime);
+                    bool success = SpawnNote(note, adjustedNoteTime);
                     if (!success && debugMode)
                     {
                         Debug.LogWarning($"ノート生成に失敗しました: {note.GetMusicalDescription()}");
@@ -143,7 +149,7 @@ public class NoteManager : MonoBehaviour
             // ホールドノートの長さ設定
             if (note.type == "hold" && note.duration > 0)
             {
-                SetupHoldNote(noteObj, note);
+                SetupHoldNote(noteObj, note, noteTime); // 調整済みの時刻を渡す
             }
 
             ActiveNote activeNote = new ActiveNote(noteObj, noteTime, note.lane, note.type, note.GetMusicalDescription(), note.duration);
@@ -169,6 +175,7 @@ public class NoteManager : MonoBehaviour
     Vector3 CalculateInitialNotePosition(Note note, float noteTime, Vector3 lanePos)
     {
         // 現在の時刻から判定タイミングまでの残り時間
+        // noteTimeは既にタイミング調整が適用されているとする
         float timeToJudgment = noteTime - songTime;
 
         // 理想的な配置位置を計算
@@ -223,12 +230,13 @@ public class NoteManager : MonoBehaviour
         {
             Note note = chartManager.CurrentChart.notes[i];
             float noteTime = chartManager.GetNoteTimeFromBeats(note.GetTotalBeats());
-            float timeToNote = noteTime - currentTime;
+            float adjustedNoteTime = noteTime + noteTimingOffset; // タイミング調整を適用
+            float timeToNote = adjustedNoteTime - currentTime;
 
             // 現在見えているべきノート範囲をチェック
             if (timeToNote <= maxLookAhead && timeToNote >= -1f) // 1秒前まで許容
             {
-                bool success = SpawnNoteAtCorrectPosition(note, noteTime, i);
+                bool success = SpawnNoteAtCorrectPosition(note, adjustedNoteTime, i);
                 if (success)
                 {
                     spawnedCount++;
@@ -303,7 +311,7 @@ public class NoteManager : MonoBehaviour
             // ホールドノートの長さ設定
             if (note.type == "hold" && note.duration > 0)
             {
-                SetupHoldNote(noteObj, note);
+                SetupHoldNote(noteObj, note, noteTime); // 調整済みの時刻を渡す
             }
 
             ActiveNote activeNote = new ActiveNote(noteObj, noteTime, note.lane, note.type, note.GetMusicalDescription(), note.duration);
@@ -345,7 +353,7 @@ public class NoteManager : MonoBehaviour
         }
     }
 
-    void SetupHoldNote(GameObject noteObj, Note note)
+    void SetupHoldNote(GameObject noteObj, Note note, float adjustedNoteTime)
     {
         // BPMから長さを計算
         float bpm = chartManager.CurrentBPM;
@@ -364,8 +372,8 @@ public class NoteManager : MonoBehaviour
         currentPos.z += holdLength * 0.5f; // 長さの半分だけ後ろに移動
         noteObj.transform.position = currentPos;
 
-        // ★ 修正：正しいstartTimeとlaneを渡す
-        float noteStartTime = chartManager.GetNoteTimeFromBeats(note.GetTotalBeats());
+        // ★ 修正：調整済みのstartTimeを使用（SpawnNoteから渡される）
+        // SetupHoldNoteは調整済みのnoteTimeが渡される前提で動作するように変更
 
         // ホールドノート専用のコンポーネントを追加・初期化
         HoldNoteController holdController = noteObj.GetComponent<HoldNoteController>();
@@ -373,14 +381,14 @@ public class NoteManager : MonoBehaviour
         {
             holdController = noteObj.AddComponent<HoldNoteController>();
         }
-        holdController.Initialize(note.duration, durationInSeconds, holdLength, noteStartTime, note.lane);
+        holdController.Initialize(note.duration, durationInSeconds, holdLength, adjustedNoteTime, note.lane);
 
         if (debugMode)
         {
             Debug.Log($"Hold Note Setup:");
             Debug.Log($"  Duration: {note.duration}拍 ({durationInSeconds:F2}秒)");
             Debug.Log($"  Length: {holdLength:F2} ワールド単位");
-            Debug.Log($"  Start Time: {noteStartTime:F3}s");
+            Debug.Log($"  Start Time: {adjustedNoteTime:F3}s");
             Debug.Log($"  Lane: {note.lane}");
             Debug.Log($"  Scale: {noteObj.transform.localScale}");
             Debug.Log($"  Adjusted Position: {noteObj.transform.position}");

@@ -12,9 +12,9 @@
     {"measure": 1, "beat": 0, "bpm": 120, "timeSignature": [4, 4]}
   ],
   "notes": [
-    {"measure": 1, "beat": 0.0, "lane": 0, "type": "hold", "duration": 3.0},
-    {"measure": 2, "beat": 0.0, "lane": 5, "type": "hold", "duration": 3.0},
-    {"measure": 3, "beat": 0.0, "lane": 0, "type": "hold", "duration": 2.0},
-    {"measure": 4, "beat": 0.0, "lane": 5, "type": "hold", "duration": 2.0}
+    {"measure": 1, "beat": 0.0, "lane": 0, "type": "hold", "duration": 1.0},
+    {"measure": 2, "beat": 0.0, "lane": 5, "type": "hold", "duration": 2.0},
+    {"measure": 3, "beat": 0.0, "lane": 0, "type": "hold", "duration": 3.0},
+    {"measure": 4, "beat": 0.0, "lane": 5, "type": "hold", "duration": 4.0}
   ]
 }

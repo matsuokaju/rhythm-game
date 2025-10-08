@@ -45,6 +45,10 @@ public class HoldNoteController : MonoBehaviour
     private NoteManager noteManager;
 
     private float songTime => gameController?.SongTime ?? 0f;
+    
+    // 既に調整済みの時刻が渡されているので、そのまま使用
+    private float GetAdjustedStartTime() => startTime;
+    private float GetAdjustedEndTime() => endTime;
 
     public enum HoldJudgmentState
     {
@@ -97,6 +101,7 @@ public class HoldNoteController : MonoBehaviour
 
         Debug.Log($"HoldNote初期化: Lane={lane}, StartTime={startTime:F3}s, Duration={duration}拍, Segments={totalSegments}");
         Debug.Log($"  JudgeLineZ={judgeLineZ}, OriginalPos={originalPosition}, OriginalLength={originalLength}");
+        Debug.Log($"  PreAdjustedStartTime={startTime:F3}s (already includes timing offset)");
         for (int i = 0; i < judgmentTimes.Length; i++)
         {
             Debug.Log($"  判定{i + 1}: {judgmentTimes[i]:F3}s");
@@ -116,8 +121,8 @@ public class HoldNoteController : MonoBehaviour
 
         for (int i = 0; i < totalSegments; i++)
         {
-            // 0.5拍目から開始
-            judgmentTimes[i] = startTime + (i + 1) * judgmentInterval;
+            // 0.5拍目から開始（タイミング調整を考慮）
+            judgmentTimes[i] = GetAdjustedStartTime() + (i + 1) * judgmentInterval;
         }
 
         Debug.Log($"判定設定: BPM={bpm}, Interval={judgmentInterval:F3}s, Segments={totalSegments}");
@@ -141,11 +146,11 @@ public class HoldNoteController : MonoBehaviour
         else if (hasStarted && !isCompleted)
             UpdateHoldVisualPosition(currentTime);
 
-        // ★修正：消去判定のロジック変更
+        // ★修正：消去判定のロジック変更（タイミング調整を考慮）
         if (hasStarted)
         {
-            // 一度でも押した場合は、endTimeで消す（従来通り）
-            if (currentTime >= endTime)
+            // 一度でも押した場合は、調整されたendTimeで消す
+            if (currentTime >= GetAdjustedEndTime())
             {
                 CompleteHold();
                 return;
@@ -171,8 +176,8 @@ public class HoldNoteController : MonoBehaviour
     // ★ 通常スクロール更新
     void UpdateNormalScroll(float currentTime)
     {
-        // ★ 修正：ホールドノートの下端（開始点）が判定線に来るタイミングでの位置計算
-        float timeToStart = startTime - currentTime;
+        // ★ 修正：ホールドノートの下端（開始点）が判定線に来るタイミングでの位置計算（タイミング調整を考慮）
+        float timeToStart = GetAdjustedStartTime() - currentTime;
         float startPointZ = judgeLineZ + timeToStart * noteSpeed;
 
         // ★ ホールドノートの中心位置を計算（下端基準）
@@ -198,8 +203,8 @@ public class HoldNoteController : MonoBehaviour
     // ホールドノートの表示位置を動的更新（下端固定）
     void UpdateHoldVisualPosition(float currentTime)
     {
-        // 上端の理想的なZ座標を計算（通常のスクロール）
-        float timeToEnd = endTime - currentTime;
+        // 上端の理想的なZ座標を計算（通常のスクロール）（タイミング調整を考慮）
+        float timeToEnd = GetAdjustedEndTime() - currentTime;
         float topEndZ = judgeLineZ + timeToEnd * noteSpeed;
 
         // 下端は判定線に固定
@@ -238,8 +243,8 @@ public class HoldNoteController : MonoBehaviour
         {
             float currentTime = songTime;
 
-            // 始点の猶予時間内なら開始
-            if (currentTime >= startTime - judgmentInterval && currentTime <= judgmentTimes[0])
+            // 始点の猶予時間内なら開始（タイミング調整を考慮）
+            if (currentTime >= GetAdjustedStartTime() - judgmentInterval && currentTime <= judgmentTimes[0])
             {
                 StartHold();
             }
@@ -357,8 +362,8 @@ public class HoldNoteController : MonoBehaviour
 
     bool HasBeenPressedInStartPeriod(float currentTime)
     {
-        // 開始猶予：startTime - judgmentInterval から judgmentTimes[0] まで
-        return currentTime >= startTime - judgmentInterval;
+        // 開始猶予：調整されたstartTime - judgmentInterval から judgmentTimes[0] まで
+        return currentTime >= GetAdjustedStartTime() - judgmentInterval;
     }
 
     bool CheckIfPressed()

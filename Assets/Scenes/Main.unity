@@ -418,7 +418,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1d03e42079b8294091029d354d38126, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chartFileName: test 180_chart (5)
+  chartFileName: test
   debugMode: 1
 --- !u!114 &336287793
 MonoBehaviour:
@@ -532,6 +532,7 @@ MonoBehaviour:
   noteSpeed: 20
   judgeLineZ: 0
   spawnDistance: 15
+  noteTimingOffset: 0.1
   debugMode: 1
 --- !u!1 &705507993
 GameObject:

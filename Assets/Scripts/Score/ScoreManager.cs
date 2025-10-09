@@ -16,6 +16,8 @@ public class ScoreManager : MonoBehaviour
 
     // ★ ホールドノート専用カウンター
     private int holdPerfectCount = 0;
+    private int holdGoodCount = 0;
+    private int holdBadCount = 0;
     private int holdMissCount = 0;
 
     // プロパティ
@@ -26,6 +28,8 @@ public class ScoreManager : MonoBehaviour
     public int BadCount => badCount;
     public int MissCount => missCount;
     public int HoldPerfectCount => holdPerfectCount;
+    public int HoldGoodCount => holdGoodCount;
+    public int HoldBadCount => holdBadCount;
     public int HoldMissCount => holdMissCount;
 
     public void Initialize()
@@ -33,7 +37,7 @@ public class ScoreManager : MonoBehaviour
         score = 0;
         combo = 0;
         perfectCount = goodCount = badCount = missCount = 0;
-        holdPerfectCount = holdMissCount = 0;
+        holdPerfectCount = holdGoodCount = holdBadCount = holdMissCount = 0;
     }
 
     // 既存のタップノート判定処理
@@ -99,21 +103,29 @@ public class ScoreManager : MonoBehaviour
                 break;
 
             case JudgmentType.Good:
-                if (!isHold) // ホールドにはGood判定がない
+                score += goodScore;
+                if (isHold)
                 {
-                    score += goodScore;
-                    goodCount++;
-                    combo++;
+                    holdGoodCount++;
                 }
+                else
+                {
+                    goodCount++;
+                }
+                combo++;
                 break;
 
             case JudgmentType.Bad:
-                if (!isHold) // ホールドにはBad判定がない
+                score += badScore;
+                if (isHold)
                 {
-                    score += badScore;
-                    badCount++;
-                    combo = 0;
+                    holdBadCount++;
                 }
+                else
+                {
+                    badCount++;
+                }
+                combo = 0;
                 break;
 
             case JudgmentType.Miss:
@@ -138,11 +150,11 @@ public class ScoreManager : MonoBehaviour
         Debug.Log($"=== タップノート ===");
         Debug.Log($"Perfect: {perfectCount}, Good: {goodCount}, Bad: {badCount}, Miss: {missCount}");
         Debug.Log($"=== ホールドノート ===");
-        Debug.Log($"Hold Perfect: {holdPerfectCount}, Hold Miss: {holdMissCount}");
+        Debug.Log($"Hold Perfect: {holdPerfectCount}, Hold Good: {holdGoodCount}, Hold Bad: {holdBadCount}, Hold Miss: {holdMissCount}");
 
         // 全体の正解率計算
         int totalTapNotes = perfectCount + goodCount + badCount + missCount;
-        int totalHoldSegments = holdPerfectCount + holdMissCount;
+        int totalHoldSegments = holdPerfectCount + holdGoodCount + holdBadCount + holdMissCount;
         int totalJudgments = totalTapNotes + totalHoldSegments;
 
         if (totalJudgments > 0)

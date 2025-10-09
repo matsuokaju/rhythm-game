@@ -107,7 +107,7 @@ public class GameUI : MonoBehaviour
         GUI.Label(new Rect(10, 100, 400, 30), $"Tap - P:{scoreManager.PerfectCount} G:{scoreManager.GoodCount} B:{scoreManager.BadCount} M:{scoreManager.MissCount}", style);
 
         // ★ 新規追加：ホールドノート判定数表示
-        GUI.Label(new Rect(10, 130, 400, 30), $"Hold - P:{scoreManager.HoldPerfectCount} M:{scoreManager.HoldMissCount}", style);
+        GUI.Label(new Rect(10, 130, 500, 30), $"Hold - P:{scoreManager.HoldPerfectCount} G:{scoreManager.HoldGoodCount} B:{scoreManager.HoldBadCount} M:{scoreManager.HoldMissCount}", style);
 
         // Time表示を小数点第2位まで精密表示
         GUI.Label(new Rect(10, 160, 200, 30), $"Time: {gameController.SongTime:F2}s", style);

@@ -11,9 +11,13 @@ public class HoldNoteController : MonoBehaviour
 
     [Header("判定設定")]
     public float judgmentInterval;  // 判定間隔（秒）
-    public float[] judgmentTimes;   // 各判定タイミング
+    public float[] judgmentTimes;   // 各判定タイミング（始点判定は含まない）
     public int currentJudgmentIndex = 0; // 現在の判定インデックス
-    public int totalSegments;       // 総判定回数
+    public int totalSegments;       // 総判定回数（始点判定は含まない）
+    
+    [Header("始点判定")]
+    public bool startJudgmentCompleted = false; // 始点判定が完了したか
+    public JudgmentResult startJudgmentResult = JudgmentResult.None; // 始点の判定結果
 
     [Header("状態")]
     public HoldJudgmentState currentState = HoldJudgmentState.NotStarted;
@@ -96,8 +100,15 @@ public class HoldNoteController : MonoBehaviour
         isCurrentlyPressed = false;
         previousPressed = false;
 
-        // 各区間の離し記録を初期化
-        segmentWasReleased = new bool[totalSegments];
+        // 各区間の離し記録を初期化（totalSegments > 0の場合のみ）
+        if (totalSegments > 0)
+        {
+            segmentWasReleased = new bool[totalSegments];
+        }
+        else
+        {
+            segmentWasReleased = new bool[0]; // 空の配列
+        }
 
         Debug.Log($"HoldNote初期化: Lane={lane}, StartTime={startTime:F3}s, Duration={duration}拍, Segments={totalSegments}");
         Debug.Log($"  JudgeLineZ={judgeLineZ}, OriginalPos={originalPosition}, OriginalLength={originalLength}");
@@ -114,18 +125,27 @@ public class HoldNoteController : MonoBehaviour
         float beatInterval = 0.5f;
         judgmentInterval = (60f / bpm) * beatInterval;
 
-        // 判定回数を正確に計算（duration拍 * 2 - 1）
-        // 例：3拍なら 3 * 2 - 1 = 5回（0.5, 1.0, 1.5, 2.0, 2.5拍目）
-        totalSegments = Mathf.RoundToInt(duration * 2f) - 1;
-        judgmentTimes = new float[totalSegments];
-
-        for (int i = 0; i < totalSegments; i++)
+        // 区間判定回数を計算（始点判定は含まない）
+        // 0.5拍未満の場合は区間判定なし（始点判定のみ）
+        if (duration < 0.5f)
         {
-            // 0.5拍目から開始（タイミング調整を考慮）
-            judgmentTimes[i] = GetAdjustedStartTime() + (i + 1) * judgmentInterval;
+            totalSegments = 0;
+            judgmentTimes = new float[0];
+            Debug.Log($"短いホールド判定設定: Duration={duration}拍, 始点判定のみ");
         }
+        else
+        {
+            // 0.5拍以上の場合は従来通り（duration拍 * 2 - 1）
+            totalSegments = Mathf.RoundToInt(duration * 2f) - 1;
+            judgmentTimes = new float[totalSegments];
 
-        Debug.Log($"判定設定: BPM={bpm}, Interval={judgmentInterval:F3}s, Segments={totalSegments}");
+            for (int i = 0; i < totalSegments; i++)
+            {
+                // 0.5拍目から開始（タイミング調整を考慮）
+                judgmentTimes[i] = GetAdjustedStartTime() + (i + 1) * judgmentInterval;
+            }
+            Debug.Log($"通常ホールド判定設定: BPM={bpm}, Interval={judgmentInterval:F3}s, Segments={totalSegments}");
+        }
     }
 
     void Update()
@@ -239,20 +259,31 @@ public class HoldNoteController : MonoBehaviour
         isCurrentlyPressed = CheckIfPressed();
 
         // ★ 押し始め検出（開始していない状態で押した場合）
-        if (!previousPressed && isCurrentlyPressed && !hasStarted)
+        if (!previousPressed && isCurrentlyPressed && !hasStarted && !startJudgmentCompleted)
         {
             float currentTime = songTime;
-
-            // 始点の猶予時間内なら開始（タイミング調整を考慮）
-            if (currentTime >= GetAdjustedStartTime() - judgmentInterval && currentTime <= judgmentTimes[0])
+            
+            // 始点のタップ判定を実行
+            startJudgmentResult = EvaluateStartJudgment(currentTime);
+            
+            if (startJudgmentResult != JudgmentResult.None)
             {
+                startJudgmentCompleted = true;
+                
+                // スコア処理
+                ProcessStartJudgment(startJudgmentResult, currentTime);
+                
+                // ホールド開始（Perfect/Good/Bad/Missに関係なく開始）
                 StartHold();
             }
-            // 猶予時間を過ぎていても途中から開始可能
-            else if (currentTime > judgmentTimes[0])
-            {
-                StartHoldLate();
-            }
+        }
+        
+        // ★ 始点をスルーした後の復帰処理
+        if (!previousPressed && isCurrentlyPressed && !hasStarted && startJudgmentCompleted)
+        {
+            // 始点判定は既に完了している（Miss）が、遅れてキーが押された場合
+            Debug.Log($"Hold遅延開始: Lane={lane} at {songTime:F3}s (始点Miss後の復帰)");
+            StartHoldLate();
         }
 
         // 離し検出：前フレーム押していて今フレーム離している
@@ -261,8 +292,9 @@ public class HoldNoteController : MonoBehaviour
             wasEverReleased = true;
             currentState = HoldJudgmentState.Released;
 
-            // 現在の区間に離しフラグを設定
-            if (currentJudgmentIndex < totalSegments)
+            // 現在の区間に離しフラグを設定（安全性チェック）
+            if (segmentWasReleased != null && currentJudgmentIndex < totalSegments && 
+                currentJudgmentIndex < segmentWasReleased.Length)
             {
                 segmentWasReleased[currentJudgmentIndex] = true;
             }
@@ -279,65 +311,100 @@ public class HoldNoteController : MonoBehaviour
     }
 
     // ★ 正常な開始
-    void StartHold()
+    private void StartHold()
     {
         hasStarted = true;
-        useNormalScroll = false; // 固定表示に切り替え
         currentState = HoldJudgmentState.Perfect;
-        Debug.Log($"Hold開始成功: Lane={lane} at {songTime:F3}s");
+        
+        Debug.Log($"ホールド開始: Lane={lane} at {songTime:F3}s, StartResult={startJudgmentResult}");
+        
+        // ビジュアル更新
+        UpdateVisuals();
     }
-
+    
     // ★ 遅れての開始（途中から）
-    void StartHoldLate()
+    private void StartHoldLate()
     {
         hasStarted = true;
         startWasMissed = true;
-        useNormalScroll = false; // 固定表示に切り替え
         currentState = HoldJudgmentState.Perfect;
 
-        // 既に過ぎた区間は全てMissとして記録
-        for (int i = 0; i < currentJudgmentIndex; i++)
+        Debug.Log($"ホールド遅延開始: Lane={lane} at {songTime:F3}s (始点Miss後)");
+
+        // 既に過ぎた区間は全てMissとして記録（安全性チェック）
+        if (segmentWasReleased != null)
         {
-            segmentWasReleased[i] = true;
+            for (int i = 0; i < currentJudgmentIndex && i < segmentWasReleased.Length; i++)
+            {
+                segmentWasReleased[i] = true;
+            }
         }
 
+        // ビジュアル更新
+        UpdateVisuals();
+        
         Debug.Log($"Hold遅れて開始: Lane={lane} at {songTime:F3}s (過去{currentJudgmentIndex}区間をMissとして記録)");
     }
 
     void ProcessJudgments(float currentTime)
     {
-        while (currentJudgmentIndex < totalSegments &&
-               currentTime >= judgmentTimes[currentJudgmentIndex])
+        // 始点判定の自動処理（タイムアウト）
+        if (!startJudgmentCompleted && currentTime >= GetAdjustedStartTime() + 0.2f) // 200ms後
         {
-            ProcessSingleJudgment(currentJudgmentIndex, currentTime);
-            currentJudgmentIndex++;
+            startJudgmentResult = JudgmentResult.Miss;
+            startJudgmentCompleted = true;
+            ProcessStartJudgment(startJudgmentResult, currentTime);
+            Debug.Log($"Hold始点判定タイムアウト: Miss at Lane={lane}");
+        }
+
+        // 区間判定の処理（0.5拍以上の場合のみ）
+        // 始点判定完了後は、ホールド開始していなくてもMiss判定を出す
+        if (startJudgmentCompleted && totalSegments > 0)
+        {
+            while (currentJudgmentIndex < totalSegments &&
+                   currentTime >= judgmentTimes[currentJudgmentIndex])
+            {
+                ProcessSingleJudgment(currentJudgmentIndex, currentTime);
+                currentJudgmentIndex++;
+            }
         }
     }
 
     void ProcessSingleJudgment(int judgmentIndex, float currentTime)
     {
+        // 安全性チェック
+        if (judgmentTimes == null || judgmentIndex >= judgmentTimes.Length)
+        {
+            Debug.LogError($"ProcessSingleJudgment: Invalid access - judgmentIndex={judgmentIndex}, array length={judgmentTimes?.Length ?? 0}");
+            return;
+        }
+        
         float judgmentTime = judgmentTimes[judgmentIndex];
 
         Debug.Log($"判定{judgmentIndex + 1}/{totalSegments}: 時刻={judgmentTime:F3}s 押下={isCurrentlyPressed} 開始済み={hasStarted}");
 
         bool shouldBePerfect = false;
 
-        if (judgmentIndex == 0)
+        if (!hasStarted)
+        {
+            // ホールドが開始していない場合は必ずMiss
+            shouldBePerfect = false;
+            Debug.Log($"Hold未開始のためMiss: 判定{judgmentIndex + 1} Lane={lane}");
+        }
+        else if (judgmentIndex == 0)
         {
             // 1回目の判定：開始猶予あり
             if (HasBeenPressedInStartPeriod(currentTime) && isCurrentlyPressed)
             {
                 shouldBePerfect = true;
-                if (!hasStarted)
-                {
-                    StartHold();
-                }
             }
         }
         else
         {
             // 2回目以降：現在押されていて、この区間で一度も離していない
-            if (hasStarted && isCurrentlyPressed && !segmentWasReleased[judgmentIndex])
+            if (isCurrentlyPressed && 
+                segmentWasReleased != null && judgmentIndex < segmentWasReleased.Length && 
+                !segmentWasReleased[judgmentIndex])
             {
                 shouldBePerfect = true;
             }
@@ -356,7 +423,12 @@ public class HoldNoteController : MonoBehaviour
             missCount++;
             scoreManager?.AddScore(JudgmentType.Miss, isHold: true);
             judgmentAnimator?.PlayJudgmentAnimation("MISS", "", lane);
-            Debug.Log($"Hold MISS: {judgmentIndex + 1}回目 Lane={lane} (理由: 開始={hasStarted}, 押下={isCurrentlyPressed}, 区間離し={segmentWasReleased[judgmentIndex]})");
+            
+            string reason = !hasStarted ? "未開始" : 
+                           !isCurrentlyPressed ? "未押下" : 
+                           (segmentWasReleased != null && judgmentIndex < segmentWasReleased.Length && segmentWasReleased[judgmentIndex]) ? "区間離し" : "その他";
+            
+            Debug.Log($"Hold MISS: {judgmentIndex + 1}回目 Lane={lane} (理由: {reason})");
         }
     }
 
@@ -364,6 +436,79 @@ public class HoldNoteController : MonoBehaviour
     {
         // 開始猶予：調整されたstartTime - judgmentInterval から judgmentTimes[0] まで
         return currentTime >= GetAdjustedStartTime() - judgmentInterval;
+    }
+
+    // 始点のタップ判定を行う（fast/late情報も含む）
+    (JudgmentResult, bool) EvaluateStartJudgmentWithTiming(float currentTime)
+    {
+        float startTime = GetAdjustedStartTime();
+        float timeDifference = currentTime - startTime; // 符号を保持
+        float timeDifferenceMs = Mathf.Abs(timeDifference) * 1000f;
+        bool isLate = timeDifference > 0; // 正の値はlate
+
+        // JudgmentSystemと同じ判定基準を使用
+        if (timeDifferenceMs <= 33.33f) return (JudgmentResult.Perfect, isLate);
+        if (timeDifferenceMs <= 66.67f) return (JudgmentResult.Good, isLate);
+        if (timeDifferenceMs <= 100.0f) return (JudgmentResult.Bad, isLate);
+        if (timeDifferenceMs <= 200.0f) return (JudgmentResult.Miss, isLate);
+        return (JudgmentResult.None, isLate);
+    }
+
+    // 始点のタップ判定を行う（後方互換性のため）
+    JudgmentResult EvaluateStartJudgment(float currentTime)
+    {
+        return EvaluateStartJudgmentWithTiming(currentTime).Item1;
+    }
+
+    // 始点判定の処理
+    void ProcessStartJudgment(JudgmentResult judgment, float currentTime)
+    {
+        // タイミング情報を取得
+        var (judgmentResult, isLate) = EvaluateStartJudgmentWithTiming(currentTime);
+        
+        // スコア処理
+        JudgmentType judgmentType = ConvertToJudgmentType(judgment);
+        scoreManager?.AddScore(judgmentType, isHold: true);
+
+        // アニメーション表示（fast/late情報を含む）
+        string judgmentText = GetJudgmentText(judgment);
+        string timingText = "";
+        
+        // Perfect以外でfast/late表示を追加
+        if (judgment != JudgmentResult.Perfect)
+        {
+            timingText = isLate ? "LATE" : "FAST";
+        }
+        
+        judgmentAnimator?.PlayJudgmentAnimation(judgmentText, timingText, lane);
+
+        Debug.Log($"Hold始点判定: {judgment} {(isLate ? "LATE" : "FAST")} at Lane={lane} Time={currentTime:F3}s");
+    }
+
+    // JudgmentResultをJudgmentTypeに変換
+    JudgmentType ConvertToJudgmentType(JudgmentResult result)
+    {
+        switch (result)
+        {
+            case JudgmentResult.Perfect: return JudgmentType.Perfect;
+            case JudgmentResult.Good: return JudgmentType.Good;
+            case JudgmentResult.Bad: return JudgmentType.Bad;
+            case JudgmentResult.Miss: return JudgmentType.Miss;
+            default: return JudgmentType.Miss;
+        }
+    }
+
+    // 判定結果をテキストに変換
+    string GetJudgmentText(JudgmentResult result)
+    {
+        switch (result)
+        {
+            case JudgmentResult.Perfect: return "PERFECT!";
+            case JudgmentResult.Good: return "GOOD";
+            case JudgmentResult.Bad: return "BAD";
+            case JudgmentResult.Miss: return "MISS";
+            default: return "MISS";
+        }
     }
 
     bool CheckIfPressed()
@@ -419,8 +564,8 @@ public class HoldNoteController : MonoBehaviour
         if (!hasStarted)
         {
             // 一度も押されていない場合
-            // ★修正：最初の判定タイミングが来てから半透明にする
-            if (judgmentTimes.Length > 0 && currentTime >= judgmentTimes[0])
+            // ★修正：配列の安全性チェックを追加
+            if (judgmentTimes != null && judgmentTimes.Length > 0 && currentTime >= judgmentTimes[0])
             {
                 shouldShowTransparent = true;
             }
@@ -462,7 +607,8 @@ public class HoldNoteController : MonoBehaviour
                 phase = "開始済み";
             }
 
-            Debug.Log($"Hold視覚更新: Lane={lane} Phase={phase} Time={currentTime:F2} FirstJudge={judgmentTimes[0]:F2} Alpha={alpha:F1}");
+            float firstJudgeTime = (judgmentTimes != null && judgmentTimes.Length > 0) ? judgmentTimes[0] : startTime + 0.5f;
+            Debug.Log($"Hold視覚更新: Lane={lane} Phase={phase} Time={currentTime:F2} FirstJudge={firstJudgeTime:F2} Alpha={alpha:F1}");
         }
     }
 }

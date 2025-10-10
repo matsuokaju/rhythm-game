@@ -1,0 +1,1654 @@
+{
+  "songInfo": {
+    "title": "まぼろし",
+    "artist": "騒音のない世界",
+    "audioFile": "maboroshi.mp3",
+    "audioOffset": -0.03,
+    "totalMeasures": 100,
+    "volume": 0.3,
+    "difficulty": "Hard",
+    "level": 1
+  },
+  "timingPoints": [
+    {
+      "measure": 1,
+      "beat": 0,
+      "bpm": 105,
+      "timeSignature": [
+        4,
+        4
+      ]
+    }
+  ],
+  "notes": [
+    {
+      "measure": 2,
+      "beat": 0,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 2,
+      "beat": 0.25,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 2,
+      "beat": 0.5,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 2,
+      "beat": 0.75,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 2,
+      "beat": 1,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 2,
+      "beat": 1.25,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 2,
+      "beat": 1.5,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 2,
+      "beat": 1.75,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 2,
+      "beat": 2,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 2,
+      "beat": 2.25,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 2,
+      "beat": 2.5,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 2,
+      "beat": 2.75,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 2,
+      "beat": 3,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 2,
+      "beat": 3.25,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 2,
+      "beat": 3.5,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 2,
+      "beat": 3.75,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 3,
+      "beat": 0,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 3,
+      "beat": 0.25,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 3,
+      "beat": 0.5,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 3,
+      "beat": 0.75,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 3,
+      "beat": 1,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 3,
+      "beat": 1.25,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 3,
+      "beat": 1.5,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 3,
+      "beat": 1.75,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 3,
+      "beat": 2,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 3,
+      "beat": 2.25,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 3,
+      "beat": 2.5,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 3,
+      "beat": 2.75,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 3,
+      "beat": 3,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 3,
+      "beat": 3.25,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 3,
+      "beat": 3.5,
+      "lane": 0,
+      "type": "hold",
+      "duration": 0.5
+    },
+    {
+      "measure": 3,
+      "beat": 3.5,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 3,
+      "beat": 3.75,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 4,
+      "beat": 0,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 4,
+      "beat": 0,
+      "lane": 5,
+      "type": "hold",
+      "duration": 3.5
+    },
+    {
+      "measure": 4,
+      "beat": 0.25,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 4,
+      "beat": 0.5,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 4,
+      "beat": 0.75,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 5,
+      "beat": 0,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 5,
+      "beat": 0,
+      "lane": 5,
+      "type": "hold",
+      "duration": 3.5
+    },
+    {
+      "measure": 5,
+      "beat": 0.25,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 5,
+      "beat": 0.5,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 5,
+      "beat": 0.75,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 5,
+      "beat": 1.25,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 5,
+      "beat": 1.75,
+      "lane": 4,
+      "type": "hold",
+      "duration": 0.5
+    },
+    {
+      "measure": 5,
+      "beat": 2.25,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 5,
+      "beat": 2.5,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 5,
+      "beat": 3,
+      "lane": 1,
+      "type": "hold",
+      "duration": 0.5
+    },
+    {
+      "measure": 6,
+      "beat": 0,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 6,
+      "beat": 0,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 6,
+      "beat": 0.25,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 6,
+      "beat": 0.5,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 6,
+      "beat": 0.75,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 6,
+      "beat": 1,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 6,
+      "beat": 1,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 6,
+      "beat": 1.75,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 6,
+      "beat": 1.75,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 6,
+      "beat": 2.25,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 6,
+      "beat": 2.25,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 6,
+      "beat": 3,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 6,
+      "beat": 3,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 6,
+      "beat": 3.5,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 7,
+      "beat": 0,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 7,
+      "beat": 0,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 7,
+      "beat": 0.25,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 7,
+      "beat": 0.5,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 7,
+      "beat": 0.75,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 7,
+      "beat": 1,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 7,
+      "beat": 1,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 7,
+      "beat": 1.25,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 7,
+      "beat": 1.75,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 7,
+      "beat": 1.75,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 7,
+      "beat": 1.75,
+      "lane": 5,
+      "type": "hold",
+      "duration": 0.5
+    },
+    {
+      "measure": 7,
+      "beat": 2.25,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 7,
+      "beat": 2.25,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 7,
+      "beat": 2.25,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 7,
+      "beat": 2.5,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 7,
+      "beat": 3,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 7,
+      "beat": 3,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 7,
+      "beat": 3,
+      "lane": 4,
+      "type": "hold",
+      "duration": 0.5
+    },
+    {
+      "measure": 7,
+      "beat": 3.5,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 8,
+      "beat": 0,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 8,
+      "beat": 0,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 8,
+      "beat": 0.25,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 8,
+      "beat": 0.5,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 8,
+      "beat": 0.75,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 8,
+      "beat": 1,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 8,
+      "beat": 1,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 8,
+      "beat": 1.75,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 8,
+      "beat": 1.75,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 8,
+      "beat": 2.25,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 8,
+      "beat": 2.25,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 8,
+      "beat": 3,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 8,
+      "beat": 3,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 8,
+      "beat": 3.5,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 9,
+      "beat": 0,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 9,
+      "beat": 0,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 9,
+      "beat": 0,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 9,
+      "beat": 0,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 9,
+      "beat": 0.5,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 9,
+      "beat": 0.625,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 9,
+      "beat": 0.75,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 9,
+      "beat": 1,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 9,
+      "beat": 1,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 9,
+      "beat": 1.5,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 9,
+      "beat": 1.75,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 9,
+      "beat": 1.75,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 9,
+      "beat": 2.25,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 9,
+      "beat": 2.25,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 9,
+      "beat": 2.75,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 9,
+      "beat": 2.875,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 9,
+      "beat": 3,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 9,
+      "beat": 3,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 9,
+      "beat": 3.5,
+      "lane": 1,
+      "type": "hold",
+      "duration": 0.25
+    },
+    {
+      "measure": 9,
+      "beat": 3.5,
+      "lane": 4,
+      "type": "hold",
+      "duration": 0.25
+    },
+    {
+      "measure": 10,
+      "beat": 0,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 10,
+      "beat": 0,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 10,
+      "beat": 0.25,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 10,
+      "beat": 0.5,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 10,
+      "beat": 0.75,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 10,
+      "beat": 1,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 10,
+      "beat": 1.25,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 10,
+      "beat": 1.75,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 10,
+      "beat": 1.75,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 10,
+      "beat": 2,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 10,
+      "beat": 2.25,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 10,
+      "beat": 2.25,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 10,
+      "beat": 2.5,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 10,
+      "beat": 2.5,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 10,
+      "beat": 3,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 10,
+      "beat": 3.25,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 11,
+      "beat": 0,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 11,
+      "beat": 0,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 11,
+      "beat": 0.25,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 11,
+      "beat": 0.5,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 11,
+      "beat": 0.75,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 11,
+      "beat": 1,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 11,
+      "beat": 1.25,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 11,
+      "beat": 1.75,
+      "lane": 2,
+      "type": "hold",
+      "duration": 0.5
+    },
+    {
+      "measure": 11,
+      "beat": 1.75,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 11,
+      "beat": 2.25,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 11,
+      "beat": 2.25,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 11,
+      "beat": 2.5,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 11,
+      "beat": 2.5,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 11,
+      "beat": 3,
+      "lane": 1,
+      "type": "hold",
+      "duration": 0.5
+    },
+    {
+      "measure": 11,
+      "beat": 3,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 11,
+      "beat": 3.25,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 12,
+      "beat": 0,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 12,
+      "beat": 0,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 12,
+      "beat": 0.25,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 12,
+      "beat": 0.5,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 12,
+      "beat": 0.75,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 12,
+      "beat": 1,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 12,
+      "beat": 1.25,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 12,
+      "beat": 1.75,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 12,
+      "beat": 1.75,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 12,
+      "beat": 2,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 12,
+      "beat": 2.25,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 12,
+      "beat": 2.25,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 12,
+      "beat": 2.5,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 12,
+      "beat": 2.5,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 12,
+      "beat": 3,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 12,
+      "beat": 3.5,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 13,
+      "beat": 0,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 13,
+      "beat": 0,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 13,
+      "beat": 0.25,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 13,
+      "beat": 0.5,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 13,
+      "beat": 0.75,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 13,
+      "beat": 1,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 13,
+      "beat": 1.25,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 13,
+      "beat": 1.75,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 13,
+      "beat": 1.75,
+      "lane": 5,
+      "type": "hold",
+      "duration": 0.5
+    },
+    {
+      "measure": 13,
+      "beat": 2.25,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 13,
+      "beat": 2.25,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 13,
+      "beat": 2.5,
+      "lane": 0,
+      "type": "hold",
+      "duration": 0.5
+    },
+    {
+      "measure": 13,
+      "beat": 2.5,
+      "lane": 1,
+      "type": "hold",
+      "duration": 0.5
+    },
+    {
+      "measure": 13,
+      "beat": 2.5,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 13,
+      "beat": 3,
+      "lane": 2,
+      "type": "hold",
+      "duration": 0.5
+    },
+    {
+      "measure": 13,
+      "beat": 3.25,
+      "lane": 4,
+      "type": "hold",
+      "duration": 0.5
+    },
+    {
+      "measure": 13,
+      "beat": 3.25,
+      "lane": 5,
+      "type": "hold",
+      "duration": 0.5
+    },
+    {
+      "measure": 13,
+      "beat": 3.75,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 14,
+      "beat": 0,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 14,
+      "beat": 0,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 14,
+      "beat": 0.25,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 14,
+      "beat": 0.5,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 14,
+      "beat": 0.75,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 14,
+      "beat": 1,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 14,
+      "beat": 1.25,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 14,
+      "beat": 1.75,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 14,
+      "beat": 1.75,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 14,
+      "beat": 2,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 14,
+      "beat": 2.25,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 14,
+      "beat": 2.25,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 14,
+      "beat": 2.5,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 14,
+      "beat": 2.5,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 14,
+      "beat": 3,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 14,
+      "beat": 3.25,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 15,
+      "beat": 0,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 15,
+      "beat": 0,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 15,
+      "beat": 0.25,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 15,
+      "beat": 0.5,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 15,
+      "beat": 0.75,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 15,
+      "beat": 1,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 15,
+      "beat": 1.25,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 15,
+      "beat": 1.75,
+      "lane": 2,
+      "type": "hold",
+      "duration": 0.5
+    },
+    {
+      "measure": 15,
+      "beat": 1.75,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 15,
+      "beat": 2.25,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 15,
+      "beat": 2.25,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 15,
+      "beat": 2.5,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 15,
+      "beat": 2.5,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 15,
+      "beat": 3,
+      "lane": 1,
+      "type": "hold",
+      "duration": 0.5
+    },
+    {
+      "measure": 15,
+      "beat": 3,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 15,
+      "beat": 3.375,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 15,
+      "beat": 3.75,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 16,
+      "beat": 0,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 16,
+      "beat": 0,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 16,
+      "beat": 0.25,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 16,
+      "beat": 0.5,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 16,
+      "beat": 0.75,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 16,
+      "beat": 1,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 16,
+      "beat": 1.25,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 16,
+      "beat": 1.75,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 16,
+      "beat": 1.75,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 16,
+      "beat": 2,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 16,
+      "beat": 2.25,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 16,
+      "beat": 2.25,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 16,
+      "beat": 2.5,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 16,
+      "beat": 2.5,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 16,
+      "beat": 3,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 16,
+      "beat": 3.25,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 17,
+      "beat": 0,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 17,
+      "beat": 0,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 17,
+      "beat": 0.25,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 17,
+      "beat": 0.5,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 17,
+      "beat": 0.75,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 17,
+      "beat": 1,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 17,
+      "beat": 1.25,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 17,
+      "beat": 1.75,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 17,
+      "beat": 1.75,
+      "lane": 5,
+      "type": "hold",
+      "duration": 0.5
+    },
+    {
+      "measure": 17,
+      "beat": 2.25,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 17,
+      "beat": 2.25,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 17,
+      "beat": 2.5,
+      "lane": 0,
+      "type": "hold",
+      "duration": 0.5
+    },
+    {
+      "measure": 17,
+      "beat": 2.5,
+      "lane": 1,
+      "type": "hold",
+      "duration": 0.5
+    },
+    {
+      "measure": 17,
+      "beat": 2.5,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 17,
+      "beat": 3,
+      "lane": 2,
+      "type": "hold",
+      "duration": 0.5
+    },
+    {
+      "measure": 17,
+      "beat": 3.25,
+      "lane": 4,
+      "type": "hold",
+      "duration": 0.5
+    },
+    {
+      "measure": 17,
+      "beat": 3.25,
+      "lane": 5,
+      "type": "hold",
+      "duration": 0.5
+    },
+    {
+      "measure": 17,
+      "beat": 3.75,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 18,
+      "beat": 0,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 18,
+      "beat": 0,
+      "lane": 1,
+      "type": "hold",
+      "duration": 0.5
+    },
+    {
+      "measure": 18,
+      "beat": 0,
+      "lane": 4,
+      "type": "hold",
+      "duration": 0.5
+    },
+    {
+      "measure": 18,
+      "beat": 0,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 18,
+      "beat": 0.5,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 18,
+      "beat": 0.5,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 18,
+      "beat": 1,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 18,
+      "beat": 1,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 18,
+      "beat": 1,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 18,
+      "beat": 1,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 18,
+      "beat": 2,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 18,
+      "beat": 2,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 18,
+      "beat": 2,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 18,
+      "beat": 2,
+      "lane": 5,
+      "type": "tap"
+    },
+    {
+      "measure": 18,
+      "beat": 2.75,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 18,
+      "beat": 2.75,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 18,
+      "beat": 2.75,
+      "lane": 3,
+      "type": "tap"
+    },
+    {
+      "measure": 18,
+      "beat": 2.75,
+      "lane": 4,
+      "type": "tap"
+    },
+    {
+      "measure": 18,
+      "beat": 3.5,
+      "lane": 5,
+      "type": "tap"
+    }
+  ]
+}

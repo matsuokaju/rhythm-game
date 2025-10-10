@@ -315,8 +315,9 @@ public class HoldNoteController : MonoBehaviour
     {
         hasStarted = true;
         currentState = HoldJudgmentState.Perfect;
+        useNormalScroll = false; // 下端を判定ラインに固定
         
-        Debug.Log($"ホールド開始: Lane={lane} at {songTime:F3}s, StartResult={startJudgmentResult}");
+        Debug.Log($"ホールド開始: Lane={lane} at {songTime:F3}s, StartResult={startJudgmentResult}, useNormalScroll={useNormalScroll}");
         
         // ビジュアル更新
         UpdateVisuals();
@@ -328,8 +329,9 @@ public class HoldNoteController : MonoBehaviour
         hasStarted = true;
         startWasMissed = true;
         currentState = HoldJudgmentState.Perfect;
+        useNormalScroll = false; // 復帰時は下端を判定ラインに固定
 
-        Debug.Log($"ホールド遅延開始: Lane={lane} at {songTime:F3}s (始点Miss後)");
+        Debug.Log($"ホールド遅延開始: Lane={lane} at {songTime:F3}s (始点Miss後), useNormalScroll={useNormalScroll}");
 
         // 既に過ぎた区間は全てMissとして記録（安全性チェック）
         if (segmentWasReleased != null)
@@ -343,7 +345,7 @@ public class HoldNoteController : MonoBehaviour
         // ビジュアル更新
         UpdateVisuals();
         
-        Debug.Log($"Hold遅れて開始: Lane={lane} at {songTime:F3}s (過去{currentJudgmentIndex}区間をMissとして記録)");
+        Debug.Log($"Hold遅れて開始: Lane={lane} at {songTime:F3}s (過去{currentJudgmentIndex}区間をMiss として記録)");
     }
 
     void ProcessJudgments(float currentTime)
@@ -353,7 +355,7 @@ public class HoldNoteController : MonoBehaviour
         {
             startJudgmentResult = JudgmentResult.Miss;
             startJudgmentCompleted = true;
-            ProcessStartJudgment(startJudgmentResult, currentTime);
+            ProcessStartJudgmentTimeout(startJudgmentResult, currentTime);
             Debug.Log($"Hold始点判定タイムアウト: Miss at Lane={lane}");
         }
 
@@ -460,7 +462,7 @@ public class HoldNoteController : MonoBehaviour
         return EvaluateStartJudgmentWithTiming(currentTime).Item1;
     }
 
-    // 始点判定の処理
+    // 始点判定の処理（キー押し時）
     void ProcessStartJudgment(JudgmentResult judgment, float currentTime)
     {
         // タイミング情報を取得
@@ -483,6 +485,22 @@ public class HoldNoteController : MonoBehaviour
         judgmentAnimator?.PlayJudgmentAnimation(judgmentText, timingText, lane);
 
         Debug.Log($"Hold始点判定: {judgment} {(isLate ? "LATE" : "FAST")} at Lane={lane} Time={currentTime:F3}s");
+    }
+
+    // 始点判定の処理（タイムアウト時）
+    void ProcessStartJudgmentTimeout(JudgmentResult judgment, float currentTime)
+    {
+        // スコア処理
+        JudgmentType judgmentType = ConvertToJudgmentType(judgment);
+        scoreManager?.AddScore(judgmentType, isHold: true);
+
+        // アニメーション表示（fast/late情報を含めない）
+        string judgmentText = GetJudgmentText(judgment);
+        string timingText = ""; // タイムアウト時はfast/late表示なし
+        
+        judgmentAnimator?.PlayJudgmentAnimation(judgmentText, timingText, lane);
+
+        Debug.Log($"Hold始点判定タイムアウト: {judgment} at Lane={lane} Time={currentTime:F3}s");
     }
 
     // JudgmentResultをJudgmentTypeに変換

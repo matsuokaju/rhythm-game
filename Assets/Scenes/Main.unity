@@ -418,7 +418,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1d03e42079b8294091029d354d38126, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chartFileName: test
+  chartFileName: "\u30C6\u30B9\u30C8\u697D\u66F2_chart (4)"
   debugMode: 1
 --- !u!114 &336287793
 MonoBehaviour:
@@ -500,9 +500,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f219f9ef39ef5941bc45260f2381927, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  perfectTiming: 33.33
-  goodTiming: 66.67
-  badTiming: 100
+  perfectTiming: 50
+  goodTiming: 100
+  badTiming: 150
   missTiming: 200
   debugMode: 1
   lastJudgment: 
@@ -529,10 +529,10 @@ MonoBehaviour:
   - {fileID: 2050763395}
   - {fileID: 2009120205}
   - {fileID: 941479148}
-  noteSpeed: 20
+  noteSpeed: 25
   judgeLineZ: 0
   spawnDistance: 15
-  noteTimingOffset: 0.1
+  noteTimingOffset: 0.12
   debugMode: 1
 --- !u!1 &705507993
 GameObject:

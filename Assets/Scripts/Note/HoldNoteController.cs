@@ -255,59 +255,8 @@ public class HoldNoteController : MonoBehaviour
 
     void UpdateKeyState()
     {
-        previousPressed = isCurrentlyPressed;
-        isCurrentlyPressed = CheckIfPressed();
-
-        // ★ 押し始め検出（開始していない状態で押した場合）
-        if (!previousPressed && isCurrentlyPressed && !hasStarted && !startJudgmentCompleted)
-        {
-            float currentTime = songTime;
-            
-            // 始点のタップ判定を実行
-            startJudgmentResult = EvaluateStartJudgment(currentTime);
-            
-            if (startJudgmentResult != JudgmentResult.None)
-            {
-                startJudgmentCompleted = true;
-                
-                // スコア処理
-                ProcessStartJudgment(startJudgmentResult, currentTime);
-                
-                // ホールド開始（Perfect/Good/Bad/Missに関係なく開始）
-                StartHold();
-            }
-        }
-        
-        // ★ 始点をスルーした後の復帰処理
-        if (!previousPressed && isCurrentlyPressed && !hasStarted && startJudgmentCompleted)
-        {
-            // 始点判定は既に完了している（Miss）が、遅れてキーが押された場合
-            Debug.Log($"Hold遅延開始: Lane={lane} at {songTime:F3}s (始点Miss後の復帰)");
-            StartHoldLate();
-        }
-
-        // 離し検出：前フレーム押していて今フレーム離している
-        if (previousPressed && !isCurrentlyPressed && hasStarted)
-        {
-            wasEverReleased = true;
-            currentState = HoldJudgmentState.Released;
-
-            // 現在の区間に離しフラグを設定（安全性チェック）
-            if (segmentWasReleased != null && currentJudgmentIndex < totalSegments && 
-                currentJudgmentIndex < segmentWasReleased.Length)
-            {
-                segmentWasReleased[currentJudgmentIndex] = true;
-            }
-
-            Debug.Log($"Hold離し検出: Lane={lane} at {songTime:F3}s (区間{currentJudgmentIndex + 1})");
-        }
-
-        // 復帰検出
-        if (!previousPressed && isCurrentlyPressed && hasStarted && currentState == HoldJudgmentState.Released)
-        {
-            currentState = HoldJudgmentState.Perfect;
-            Debug.Log($"Hold復帰: Lane={lane} at {songTime:F3}s");
-        }
+        // ★ 修正：直接Input監視を削除し、JudgmentSystemからの通知のみで動作
+        // キー状態の更新と判定処理は OnKeyPress/OnKeyRelease で処理される
     }
 
     // ★ 正常な開始
@@ -529,28 +478,71 @@ public class HoldNoteController : MonoBehaviour
         }
     }
 
-    bool CheckIfPressed()
-    {
-        switch (lane)
-        {
-            case 0: return Input.GetKey(KeyCode.S);
-            case 1: return Input.GetKey(KeyCode.D);
-            case 2: return Input.GetKey(KeyCode.F);
-            case 3: return Input.GetKey(KeyCode.J);
-            case 4: return Input.GetKey(KeyCode.K);
-            case 5: return Input.GetKey(KeyCode.L);
-            default: return Input.GetKey(KeyCode.Space);
-        }
-    }
-
     public void OnKeyPress()
     {
-        // UpdateKeyState()で処理するため、ここでは何もしない
+        Debug.Log($"Hold OnKeyPress: Lane={lane} at {songTime:F3}s (hasStarted={hasStarted}, startJudgmentCompleted={startJudgmentCompleted})");
+        
+        previousPressed = isCurrentlyPressed;
+        isCurrentlyPressed = true;
+
+        // ★ 押し始め検出（開始していない状態で押した場合）
+        if (!previousPressed && isCurrentlyPressed && !hasStarted && !startJudgmentCompleted)
+        {
+            float currentTime = songTime;
+            
+            // 始点のタップ判定を実行
+            startJudgmentResult = EvaluateStartJudgment(currentTime);
+            
+            if (startJudgmentResult != JudgmentResult.None)
+            {
+                startJudgmentCompleted = true;
+                
+                // スコア処理
+                ProcessStartJudgment(startJudgmentResult, currentTime);
+                
+                // ホールド開始（Perfect/Good/Bad/Missに関係なく開始）
+                StartHold();
+            }
+        }
+        
+        // ★ 始点をスルーした後の復帰処理
+        if (!previousPressed && isCurrentlyPressed && !hasStarted && startJudgmentCompleted)
+        {
+            // 始点判定は既に完了している（Miss）が、遅れてキーが押された場合
+            Debug.Log($"Hold遅延開始: Lane={lane} at {songTime:F3}s (始点Miss後の復帰)");
+            StartHoldLate();
+        }
+
+        // 復帰検出
+        if (!previousPressed && isCurrentlyPressed && hasStarted && currentState == HoldJudgmentState.Released)
+        {
+            currentState = HoldJudgmentState.Perfect;
+            Debug.Log($"Hold復帰: Lane={lane} at {songTime:F3}s");
+        }
     }
 
     public void OnKeyRelease()
     {
-        // UpdateKeyState()で処理するため、ここでは何もしない
+        Debug.Log($"Hold OnKeyRelease: Lane={lane} at {songTime:F3}s (hasStarted={hasStarted})");
+        
+        previousPressed = isCurrentlyPressed;
+        isCurrentlyPressed = false;
+
+        // 離し検出：前フレーム押していて今フレーム離している
+        if (previousPressed && !isCurrentlyPressed && hasStarted)
+        {
+            wasEverReleased = true;
+            currentState = HoldJudgmentState.Released;
+
+            // 現在の区間に離しフラグを設定（安全性チェック）
+            if (segmentWasReleased != null && currentJudgmentIndex < totalSegments && 
+                currentJudgmentIndex < segmentWasReleased.Length)
+            {
+                segmentWasReleased[currentJudgmentIndex] = true;
+            }
+
+            Debug.Log($"Hold離し検出: Lane={lane} at {songTime:F3}s (区間{currentJudgmentIndex + 1})");
+        }
     }
 
     void CompleteHold()

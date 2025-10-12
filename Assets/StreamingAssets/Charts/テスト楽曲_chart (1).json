@@ -1,0 +1,77 @@
+{
+  "songInfo": {
+    "title": "テスト楽曲",
+    "artist": "Sample Artist",
+    "audioFile": "メトロノームBPM120を4小節.mp3",
+    "audioOffset": -0.025,
+    "totalMeasures": 10,
+    "volume": 0.3,
+    "difficulty": "Normal",
+    "level": 5
+  },
+  "timingPoints": [
+    {
+      "measure": 1,
+      "beat": 0,
+      "bpm": 120,
+      "timeSignature": [
+        4,
+        4
+      ]
+    }
+  ],
+  "notes": [
+    {
+      "measure": 1,
+      "beat": 0,
+      "lane": 0,
+      "type": "tap"
+    },
+    {
+      "measure": 1,
+      "beat": 0.5,
+      "lane": 0,
+      "type": "hold",
+      "duration": 1.5
+    },
+    {
+      "measure": 2,
+      "beat": 0,
+      "lane": 1,
+      "type": "tap"
+    },
+    {
+      "measure": 2,
+      "beat": 0.25,
+      "lane": 1,
+      "type": "hold",
+      "duration": 1.75
+    },
+    {
+      "measure": 3,
+      "beat": 0,
+      "lane": 2,
+      "type": "tap"
+    },
+    {
+      "measure": 3,
+      "beat": 0.25,
+      "lane": 2,
+      "type": "hold",
+      "duration": 1.75
+    },
+    {
+      "measure": 4,
+      "beat": 0,
+      "lane": 3,
+      "type": "hold",
+      "duration": 2
+    },
+    {
+      "measure": 4,
+      "beat": 2.25,
+      "lane": 3,
+      "type": "tap"
+    }
+  ]
+}

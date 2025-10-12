@@ -64,16 +64,22 @@ public class JudgmentSystem : MonoBehaviour
             bool currentKeyState = Input.GetKey(laneKeys[i]);
 
             // キー押下検出
+            bool tapNoteProcessed = false;
             if (Input.GetKeyDown(laneKeys[i]))
             {
-                CheckHit(i);
+                tapNoteProcessed = CheckHit(i);
             }
 
-            // ★ ホールドノートのキー監視
-            if (!previousKeyStates[i] && currentKeyState)
+            // ★ ホールドノートのキー監視（タップノートが処理されなかった場合のみ）
+            if (!previousKeyStates[i] && currentKeyState && !tapNoteProcessed)
             {
                 // キー押下
+                if (debugMode) Debug.Log($"NotifyHoldKeyPress: Lane={i} (タップノート未処理のため)");
                 NotifyHoldKeyPress(i);
+            }
+            else if (!previousKeyStates[i] && currentKeyState && tapNoteProcessed)
+            {
+                if (debugMode) Debug.Log($"ホールド通知スキップ: Lane={i} (タップノート処理済み)");
             }
             else if (previousKeyStates[i] && !currentKeyState)
             {
@@ -86,11 +92,14 @@ public class JudgmentSystem : MonoBehaviour
         }
     }
 
-    void CheckHit(int laneIndex)
+    bool CheckHit(int laneIndex)
     {
+        // ★ 修正：ホールドノートは除外し、タップノートのみを対象にする
         var laneNotes = noteManager.ActiveNotes
-            .Where(note => note.lane == laneIndex && note.gameObject != null)
-            .OrderBy(note => Mathf.Abs(note.hitTime - gameController.SongTime))
+            .Where(note => note.lane == laneIndex && 
+                          note.gameObject != null && 
+                          note.type != "hold") // ホールドノートを除外
+            .OrderBy(note => note.hitTime) // 時系列順（先に来たノーツ優先）
             .ToList();
 
         if (debugMode)
@@ -99,30 +108,55 @@ public class JudgmentSystem : MonoBehaviour
         if (laneNotes.Count == 0)
         {
             if (debugMode) Debug.Log($"Lane {laneIndex}: ノーツなし");
-            return;
+            return false; // タップノートなし
         }
 
-        ActiveNote closestNote = laneNotes[0];
+        // ★ 判定範囲内で最も早いノーツを探す
+        ActiveNote targetNote = null;
+        float targetTimeDifference = 0f;
+        float targetTimeDifferenceMs = 0f;
 
-        float timeDifference = closestNote.hitTime - gameController.SongTime;
-        float timeDifferenceMs = Mathf.Abs(timeDifference) * 1000f;
+        foreach (var note in laneNotes)
+        {
+            float timeDifference = note.hitTime - gameController.SongTime;
+            float timeDifferenceMs = Mathf.Abs(timeDifference) * 1000f;
+
+            // 判定範囲内かチェック
+            if (timeDifferenceMs <= missTiming)
+            {
+                targetNote = note;
+                targetTimeDifference = timeDifference;
+                targetTimeDifferenceMs = timeDifferenceMs;
+                break; // 時系列順なので最初に見つかったものが最も早い
+            }
+        }
+
+        if (targetNote == null)
+        {
+            if (debugMode) Debug.Log($"Lane {laneIndex}: 判定範囲内のノーツなし");
+            return false; // 判定範囲内にタップノートなし
+        }
 
         if (debugMode)
         {
-            float currentZ = closestNote.gameObject.transform.position.z;
-            Debug.Log($"Hit Check - Lane={laneIndex} NoteHitTime={closestNote.hitTime:F3} SongTime={gameController.SongTime:F3} Diff={timeDifference * 1000f:F1}ms Position={closestNote.position} NoteZ={currentZ:F2}");
+            float currentZ = targetNote.gameObject.transform.position.z;
+            Debug.Log($"Hit Check - Lane={laneIndex} NoteHitTime={targetNote.hitTime:F3} SongTime={gameController.SongTime:F3} Diff={targetTimeDifference * 1000f:F1}ms Position={targetNote.position} NoteZ={currentZ:F2}");
         }
 
-        JudgmentResult judgment = GetJudgment(timeDifferenceMs);
+        JudgmentResult judgment = GetJudgment(targetTimeDifferenceMs);
 
         if (judgment != JudgmentResult.None)
         {
-            ProcessHit(closestNote, judgment, timeDifferenceMs, timeDifference, laneIndex);
+            ProcessHit(targetNote, judgment, targetTimeDifferenceMs, targetTimeDifference, laneIndex);
+            if (debugMode) Debug.Log($"CheckHit完了: Lane={laneIndex} タップノート処理済み");
+            return true; // タップノートを処理した
         }
         else if (debugMode)
         {
-            Debug.Log($"Lane {laneIndex}: 判定範囲外 ({timeDifferenceMs:F1}ms差) - Miss判定範囲: {missTiming}ms");
+            Debug.Log($"Lane {laneIndex}: 判定範囲外 ({targetTimeDifferenceMs:F1}ms差) - Miss判定範囲: {missTiming}ms");
         }
+        
+        return false; // 判定範囲外
     }
 
     JudgmentResult GetJudgment(float timeDifferenceMs)
@@ -136,33 +170,8 @@ public class JudgmentSystem : MonoBehaviour
 
     void ProcessHit(ActiveNote note, JudgmentResult judgment, float timeDifferenceMs, float rawTimeDifference, int laneIndex)
     {
-        // ★ ホールドノートの場合は特別処理
-        if (note.type == "hold")
-        {
-            ProcessHoldStart(note, judgment, timeDifferenceMs, rawTimeDifference, laneIndex);
-            return;
-        }
-
-        // 通常のタップノート処理
+        // ★ ホールドノートはCheckHitで除外されているため、ここではタップノートのみが来る
         ProcessTapHit(note, judgment, timeDifferenceMs, rawTimeDifference, laneIndex);
-    }
-
-    // ホールドノート開始処理
-    void ProcessHoldStart(ActiveNote note, JudgmentResult judgment, float timeDifferenceMs, float rawTimeDifference, int laneIndex)
-    {
-        if (debugMode)
-        {
-            Debug.Log($"★ HOLD START判定スキップ: {judgment} at {note.position} (誤差: {timeDifferenceMs:F1}ms) Lane: {laneIndex}");
-        }
-
-        // ★ ホールドノートの開始判定はHoldNoteController内で処理するため、
-        // JudgmentSystemでは何もしない（削除もしない）
-
-        // 早すぎる入力の場合のみ処理
-        if (rawTimeDifference > 0.2f) // 開始猶予時間を超えて早い
-        {
-            Debug.Log("ホールド開始: 早すぎる入力のため無視");
-        }
     }
 
     // ★ タップノート処理

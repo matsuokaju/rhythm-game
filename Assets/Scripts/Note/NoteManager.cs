@@ -26,6 +26,7 @@ public class NoteManager : MonoBehaviour
     private List<ActiveNote> activeNotes = new List<ActiveNote>();
     private int nextNoteIndex = 0;
     private float travelTime;
+    private int startFromMeasure = 0; // 途中開始時の開始小節
 
     // 依存関係
     private ChartManager chartManager;
@@ -54,10 +55,34 @@ public class NoteManager : MonoBehaviour
         Debug.Log($"Note Timing Offset: {noteTimingOffset:F3}s");
     }
 
-    public void Initialize()
+    public void Initialize(int startFromMeasure = 0)
     {
+        this.startFromMeasure = startFromMeasure; // 開始小節を保存
         nextNoteIndex = 0;
         ClearAllNotes();
+        
+        // ★ 開始小節が指定されている場合、それより前のノーツをスキップ
+        if (startFromMeasure > 0 && chartManager?.CurrentChart?.notes != null)
+        {
+            int skippedNotes = 0;
+            foreach (var note in chartManager.CurrentChart.notes)
+            {
+                if (note.measure < startFromMeasure)
+                {
+                    skippedNotes++;
+                }
+                else
+                {
+                    break; // 最初の対象ノーツに到達
+                }
+            }
+            nextNoteIndex = skippedNotes;
+            
+            if (debugMode && skippedNotes > 0)
+            {
+                Debug.Log($"開始小節{startFromMeasure}: {skippedNotes}個のノーツをスキップしました");
+            }
+        }
     }
 
     public void CheckAndSpawnNotes(float songTime)
@@ -229,6 +254,17 @@ public class NoteManager : MonoBehaviour
         for (int i = 0; i < chartManager.CurrentChart.notes.Count; i++)
         {
             Note note = chartManager.CurrentChart.notes[i];
+            
+            // ★ 途中開始時：開始小節以前のノーツはスキップ
+            if (startFromMeasure > 0 && note.measure < startFromMeasure)
+            {
+                if (debugMode)
+                {
+                    Debug.Log($"初期配置スキップ（開始小節前）: {note.GetMusicalDescription()} (小節{note.measure} < {startFromMeasure})");
+                }
+                continue;
+            }
+            
             float noteTime = chartManager.GetNoteTimeFromBeats(note.GetTotalBeats());
             float adjustedNoteTime = noteTime + noteTimingOffset; // タイミング調整を適用
             float timeToNote = adjustedNoteTime - currentTime;

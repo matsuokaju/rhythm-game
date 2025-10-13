@@ -116,6 +116,12 @@ public class GameUI : MonoBehaviour
         string timeSignatureStr = $"{chartManager.CurrentTimeSignature[0]}/{chartManager.CurrentTimeSignature[1]}";
         GUI.Label(new Rect(10, 190, 300, 30), $"BPM: {chartManager.CurrentBPM:F1}, 拍子: {timeSignatureStr}", style);
 
+        // ★ 開始小節情報を表示
+        if (gameController.StartFromMeasure > 0)
+        {
+            GUI.Label(new Rect(Screen.width - 200, 10, 190, 30), $"開始: {gameController.StartFromMeasure}小節目から", style);
+        }
+
         // 位置表示（Y座標を調整）
         DrawPositionInfo();
 

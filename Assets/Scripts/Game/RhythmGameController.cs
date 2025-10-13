@@ -5,6 +5,10 @@ public class RhythmGameController : MonoBehaviour
     [Header("デバッグ設定")]
     public bool debugMode = true;
 
+    [Header("プレイ設定")]
+    [Tooltip("プレイ開始小節 (1から開始。0の場合は最初から)")]
+    public int startFromMeasure = 0;
+
     [Header("システム参照")]
     [SerializeField] private ChartManager chartManager;
     [SerializeField] private NoteManager noteManager;
@@ -21,6 +25,7 @@ public class RhythmGameController : MonoBehaviour
     // プロパティ
     public bool IsPlaying => isPlaying;
     public float SongTime => songTime;
+    public int StartFromMeasure => startFromMeasure;
 
     void Awake()
     {
@@ -109,20 +114,32 @@ public class RhythmGameController : MonoBehaviour
             return;
         }
 
+        // ★ 開始小節の計算
+        float startOffset = 0f;
+        if (startFromMeasure > 0)
+        {
+            // 指定小節の1小節前から開始（空白小節として）
+            float targetMeasureStart = chartManager.GetMeasureStartTime(startFromMeasure);
+            float previousMeasureStart = chartManager.GetMeasureStartTime(startFromMeasure - 1);
+            startOffset = previousMeasureStart;
+            
+            Debug.Log($"プレイ開始: {startFromMeasure}小節目から (オフセット: {startOffset:F3}s)");
+        }
+
         // ゲーム状態初期化
         isPlaying = true;
-        songTime = 0f;
+        songTime = startOffset; // 開始オフセットを設定
 
-        // 各システムの初期化
-        noteManager?.Initialize();
+        // 各システムの初期化（開始小節を渡す）
+        noteManager?.Initialize(startFromMeasure);
         scoreManager?.Initialize();
         judgmentSystem?.Initialize();
 
         // 初期ノート配置を追加
         noteManager?.InitializeVisibleNotes();
 
-        // 音声再生開始
-        chartManager?.StartAudio();
+        // 音声再生開始（オフセット付き）
+        chartManager?.StartAudio(startOffset);
 
         // ログ出力
         float emptyTime = chartManager?.GetEmptyMeasureTime() ?? 0f;

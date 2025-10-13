@@ -315,6 +315,18 @@ public class ChartManager : MonoBehaviour
         return currentTime + emptyTime;
     }
 
+    // ★ 指定小節の開始時刻を計算
+    public float GetMeasureStartTime(int measure)
+    {
+        if (measure <= 0) return 0f;
+        
+        // 指定小節の開始拍数を計算
+        float measureStartBeats = GetTotalBeatsForPosition(measure, 0f);
+        
+        // 拍数から時刻に変換
+        return GetNoteTimeFromBeats(measureStartBeats);
+    }
+
     // ノーツの総拍数計算（従来の4拍子固定から拍子考慮版に変更）
     float GetTotalBeatsForNote(float originalTotalBeats)
     {
@@ -437,6 +449,56 @@ public class ChartManager : MonoBehaviour
         if (audioSource != null && audioSource.isPlaying)
         {
             audioSource.Stop();
+        }
+    }
+
+    // ★ 開始オフセット付きの音声再生
+    public void StartAudio(float startOffset)
+    {
+        if (audioSource != null)
+        {
+            if (!audioSource.enabled)
+            {
+                audioSource.enabled = true;
+                Debug.Log("AudioSourceを有効化しました");
+            }
+            
+            if (audioSource.clip != null)
+            {
+                audioSource.volume = Mathf.Clamp01(currentChart.songInfo.volume);
+                
+                float emptyMeasureTime = GetEmptyMeasureTime();
+                float audioStartDelay = emptyMeasureTime + currentChart.songInfo.audioOffset - startOffset;
+                
+                if (audioStartDelay > 0)
+                {
+                    // 正の遅延: 指定秒数後に音声を再生開始
+                    StartCoroutine(DelayedAudioPlay(audioStartDelay));
+                    Debug.Log($"オフセット付き音声再生を{audioStartDelay:F3}秒後に開始予定 (startOffset: {startOffset:F3}s)");
+                }
+                else
+                {
+                    // 負または0の場合: 即座に再生開始（必要に応じて音声ファイルの途中から）
+                    if (audioStartDelay < 0)
+                    {
+                        float audioSeekTime = Mathf.Abs(audioStartDelay);
+                        if (audioSeekTime < audioSource.clip.length)
+                        {
+                            audioSource.time = audioSeekTime;
+                        }
+                    }
+                    audioSource.Play();
+                    Debug.Log($"オフセット付き音声即座再生開始 (startOffset: {startOffset:F3}s, Volume: {audioSource.volume:F2})");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("AudioClipが設定されていません");
+            }
+        }
+        else
+        {
+            Debug.LogError("AudioSourceが見つかりません");
         }
     }
 

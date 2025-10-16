@@ -214,10 +214,10 @@ public class HoldNoteController : MonoBehaviour
             transform.localScale.z
         );
 
-        if (Time.frameCount % 60 == 0) // デバッグ用
-        {
-            Debug.Log($"Hold通常スクロール: Lane={lane} TimeToStart={timeToStart:F2} StartPointZ={startPointZ:F2} CenterZ={centerZ:F2}");
-        }
+        // if (Time.frameCount % 60 == 0) // デバッグ用
+        // {
+        //     Debug.Log($"Hold通常スクロール: Lane={lane} TimeToStart={timeToStart:F2} StartPointZ={startPointZ:F2} CenterZ={centerZ:F2}");
+        // }
     }
 
     // ホールドノートの表示位置を動的更新（下端固定）
@@ -618,7 +618,7 @@ public class HoldNoteController : MonoBehaviour
             }
 
             float firstJudgeTime = (judgmentTimes != null && judgmentTimes.Length > 0) ? judgmentTimes[0] : startTime + 0.5f;
-            Debug.Log($"Hold視覚更新: Lane={lane} Phase={phase} Time={currentTime:F2} FirstJudge={firstJudgeTime:F2} Alpha={alpha:F1}");
+            // Debug.Log($"Hold視覚更新: Lane={lane} Phase={phase} Time={currentTime:F2} FirstJudge={firstJudgeTime:F2} Alpha={alpha:F1}");
         }
     }
 }

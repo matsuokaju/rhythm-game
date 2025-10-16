@@ -19,12 +19,22 @@ public class NoteManager : MonoBehaviour
 
     [Header("タイミング調整")]
     [Tooltip("ノーツのタイミング調整 (秒)\nfastが多い時: マイナス値\nlateが多い時: プラス値")]
-    public float noteTimingOffset = 0f;
+    public float noteTimingOffset = -0.025f; // audioOffsetと合わせて調整
+
+    [Header("小節線設定")]
+    public GameObject measureLinePrefab;
+    [Range(0f, 1f)]
+    public float measureLineAlpha = 0.3f;
+    public bool showMeasureLines = true;
+    [Tooltip("小節線の幅（全レーン幅）")]
+    public float measureLineWidth = 6.05f;
 
     public bool debugMode = true;
 
     private List<ActiveNote> activeNotes = new List<ActiveNote>();
+    private List<GameObject> activeMeasureLines = new List<GameObject>();
     private int nextNoteIndex = 0;
+    private int nextMeasureIndex = 0; // 次にスポーンする小節線のインデックス
     private float travelTime;
     private int startFromMeasure = 0; // 途中開始時の開始小節
 
@@ -59,7 +69,9 @@ public class NoteManager : MonoBehaviour
     {
         this.startFromMeasure = startFromMeasure; // 開始小節を保存
         nextNoteIndex = 0;
+        nextMeasureIndex = startFromMeasure; // 小節線も開始小節から
         ClearAllNotes();
+        ClearAllMeasureLines();
         
         // ★ 開始小節が指定されている場合、それより前のノーツをスキップ
         if (startFromMeasure > 0 && chartManager?.CurrentChart?.notes != null)
@@ -85,6 +97,41 @@ public class NoteManager : MonoBehaviour
         }
     }
 
+    public void CheckAndSpawnMeasureLines(float songTime)
+    {
+        if (!showMeasureLines || measureLinePrefab == null || chartManager == null) return;
+
+        float spawnThreshold = songTime + travelTime;
+        
+        // 現在の小節から先読み範囲内の小節線をスポーン
+        while (true)
+        {
+            float measureTime = chartManager.GetMeasureStartTime(nextMeasureIndex);
+            float adjustedMeasureTime = measureTime + noteTimingOffset; // スポーン判定にもオフセット適用
+            
+            if (adjustedMeasureTime <= spawnThreshold)
+            {
+                // 途中開始時：開始小節以前の小節線はスキップ
+                if (startFromMeasure > 0 && nextMeasureIndex < startFromMeasure)
+                {
+                    if (debugMode)
+                    {
+                        Debug.Log($"小節線スキップ（開始小節前）: {nextMeasureIndex}小節目");
+                    }
+                    nextMeasureIndex++;
+                    continue;
+                }
+                
+                SpawnMeasureLine(nextMeasureIndex, adjustedMeasureTime);
+                nextMeasureIndex++;
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+
     public void CheckAndSpawnNotes(float songTime)
     {
         if (chartManager?.CurrentChart?.notes == null) return;
@@ -93,7 +140,10 @@ public class NoteManager : MonoBehaviour
         while (nextNoteIndex < chartManager.CurrentChart.notes.Count)
         {
             Note note = chartManager.CurrentChart.notes[nextNoteIndex];
-            float noteTime = chartManager.GetNoteTimeFromBeats(note.GetTotalBeats());
+            
+            // ChartManagerの正確な時刻計算を使用（GetTotalBeatsForNoteは使わずに直接計算）
+            float noteBeats = chartManager.GetTotalBeatsForPosition(note.measure, note.beat);
+            float noteTime = CalculateTimeFromBeatsDirectly(noteBeats);
             float adjustedNoteTime = noteTime + noteTimingOffset; // タイミング調整を適用
 
             if (adjustedNoteTime <= spawnThreshold)
@@ -221,7 +271,7 @@ public class NoteManager : MonoBehaviour
         }
 
         // スポーン位置を計算
-        Vector3 spawnPos = new Vector3(lanePos.x, lanePos.y + 0.02f, judgeLineZ + idealDistance);
+        Vector3 spawnPos = new Vector3(lanePos.x, lanePos.y + 0.03f, judgeLineZ + idealDistance);
 
 
         if (debugMode)
@@ -233,6 +283,144 @@ public class NoteManager : MonoBehaviour
         }
 
         return spawnPos;
+    }
+
+    // ChartManagerの計算結果から直接時刻を取得（デバッグログの値を使用）
+    float CalculateTimeFromBeatsDirectly(float totalBeats)
+    {
+        // ログから確認できる正確な時刻を使用
+        // 1小節1拍目(beat=0) -> 2.000s
+        // 1小節1拍半(beat=0.5) -> 2.250s  
+        // 2小節1拍目(beat=0) -> 4.000s
+        
+        // 暫定的に、ChartManagerのGetNoteTimeFromBeatsを使用してデバッグ
+        float result = chartManager.GetNoteTimeFromBeats(totalBeats);
+        
+        return result;
+    }
+
+    void SpawnMeasureLine(int measureNumber, float adjustedMeasureTime)
+    {
+        if (measureLinePrefab == null || lanePositions.Length == 0) return;
+
+        // 既にオフセット適用済みの時刻を受け取る
+        float originalMeasureTime = adjustedMeasureTime - noteTimingOffset;
+
+        // レーンの中央位置を計算（全レーンにまたがる1本の小節線）
+        Vector3 centerPos = CalculateLanesCenterPosition();
+        Vector3 spawnPos = CalculateInitialMeasureLinePosition(adjustedMeasureTime, centerPos);
+
+        GameObject measureLine = Instantiate(measureLinePrefab, spawnPos, measureLinePrefab.transform.rotation);
+
+        // 全レーンにまたがるようにスケール調整
+        SetupMeasureLineScale(measureLine);
+
+        // 透明度設定
+        SetMeasureLineAlpha(measureLine, measureLineAlpha);
+
+        // 移動コンポーネント設定
+        MeasureLineMovement movement = measureLine.GetComponent<MeasureLineMovement>();
+        if (movement == null)
+        {
+            movement = measureLine.AddComponent<MeasureLineMovement>();
+        }
+        movement.Initialize(noteSpeed, measureNumber, this);
+
+        activeMeasureLines.Add(measureLine);
+
+        if (debugMode)
+        {
+            Debug.Log($"小節線スポーン: {measureNumber}小節目 Time={originalMeasureTime:F3}s→{adjustedMeasureTime:F3}s (offset={noteTimingOffset:F3}s) Center={centerPos}");
+        }
+    }
+
+    Vector3 CalculateLanesCenterPosition()
+    {
+        if (lanePositions.Length == 0) return Vector3.zero;
+
+        // 最初と最後のレーン位置から中央を計算
+        Vector3 firstLane = lanePositions[0].position;
+        Vector3 lastLane = lanePositions[lanePositions.Length - 1].position;
+        
+        Vector3 center = new Vector3(
+            (firstLane.x + lastLane.x) * 0.5f,
+            firstLane.y + 0.02f, // Y軸を少し上げて小節線とする
+            firstLane.z
+        );
+
+        return center;
+    }
+
+    void SetupMeasureLineScale(GameObject measureLine)
+    {
+        if (lanePositions.Length == 0) return;
+
+        // Quadを水平（X-Z平面）に向ける
+        measureLine.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+
+        // 小節線のスケールを設定
+        measureLine.transform.localScale = new Vector3(
+            measureLineWidth,    // X軸：全レーン幅（Inspector設定値）
+            0.1f,               // Y軸：小節線の厚み（回転後はZ軸方向）
+            measureLine.transform.localScale.z  // Z軸：そのまま
+        );
+
+        if (debugMode)
+        {
+            Debug.Log($"小節線設定: 幅={measureLineWidth}, 厚み=0.1, 回転=(90,0,0)");
+        }
+    }
+
+    Vector3 CalculateInitialMeasureLinePosition(float measureTime, Vector3 centerPos)
+    {
+        // 現在の時刻から小節線タイミングまでの残り時間
+        float timeToMeasure = measureTime - songTime;
+
+        // 理想的な配置位置を計算
+        float idealDistance;
+
+        if (timeToMeasure > 0)
+        {
+            // まだ小節線タイミング前：残り時間 × 速度で距離計算
+            idealDistance = timeToMeasure * noteSpeed;
+            // 最大スポーン距離でクランプ
+            idealDistance = Mathf.Min(idealDistance, spawnDistance);
+        }
+        else
+        {
+            // 既に小節線タイミング後：判定ライン位置
+            idealDistance = 0f;
+        }
+
+        // スポーン位置を計算
+        Vector3 spawnPos = new Vector3(centerPos.x, centerPos.y, judgeLineZ + idealDistance);
+
+        return spawnPos;
+    }
+
+    void SetMeasureLineAlpha(GameObject measureLine, float alpha)
+    {
+        Renderer renderer = measureLine.GetComponent<Renderer>();
+        if (renderer != null && renderer.material != null)
+        {
+            Color color = renderer.material.color;
+            color.a = alpha;
+            renderer.material.color = color;
+        }
+    }
+
+    public void RemoveMeasureLine(GameObject measureLine)
+    {
+        activeMeasureLines.Remove(measureLine);
+    }
+
+    public void ClearAllMeasureLines()
+    {
+        foreach (var measureLine in activeMeasureLines)
+        {
+            if (measureLine != null) Destroy(measureLine);
+        }
+        activeMeasureLines.Clear();
     }
 
     public void InitializeVisibleNotes()
@@ -265,7 +453,9 @@ public class NoteManager : MonoBehaviour
                 continue;
             }
             
-            float noteTime = chartManager.GetNoteTimeFromBeats(note.GetTotalBeats());
+            // ChartManagerの正確な時刻計算を使用
+            float noteBeats = chartManager.GetTotalBeatsForPosition(note.measure, note.beat);
+            float noteTime = CalculateTimeFromBeatsDirectly(noteBeats);
             float adjustedNoteTime = noteTime + noteTimingOffset; // タイミング調整を適用
             float timeToNote = adjustedNoteTime - currentTime;
 
@@ -474,6 +664,7 @@ public class NoteManager : MonoBehaviour
             if (note.gameObject != null) Destroy(note.gameObject);
         }
         activeNotes.Clear();
+        ClearAllMeasureLines();
     }
 
     void ValidateLanes()
@@ -503,3 +694,31 @@ public class NoteMovement : MonoBehaviour
 }
 
 public class NotePassedMarker : MonoBehaviour { }
+
+public class MeasureLineMovement : MonoBehaviour
+{
+    public float speed;
+    public int measureNumber;
+    
+    private NoteManager noteManager;
+
+    public void Initialize(float noteSpeed, int measure, NoteManager manager)
+    {
+        speed = noteSpeed;
+        measureNumber = measure;
+        noteManager = manager;
+    }
+
+    void Update()
+    {
+        // 回転に関係なく、ワールド座標のZ軸負方向に移動
+        transform.position += Vector3.back * speed * Time.deltaTime;
+
+        // 判定ラインを通過したら削除
+        if (transform.position.z < -5f)
+        {
+            noteManager?.RemoveMeasureLine(gameObject);
+            Destroy(gameObject);
+        }
+    }
+}

@@ -76,7 +76,26 @@ public class Note
 
     public float GetTotalBeats()
     {
-        return (measure - 1) * 4f + beat;
+        // デバッグ用に詳細ログ出力
+        var chartManager = UnityEngine.Object.FindObjectOfType<ChartManager>();
+        if (chartManager != null)
+        {
+            float oldCalculation = (measure - 1) * 4f + beat;
+            float newCalculation = chartManager.GetTotalBeatsForPosition(measure, beat);
+            
+            // 0.25拍以上の差がある場合のみログ出力（スパム防止）
+            if (Mathf.Abs(oldCalculation - newCalculation) >= 0.24f)
+            {
+                UnityEngine.Debug.Log($"Note Beat差異検出: {measure}小節{beat}拍 -> 旧計算:{oldCalculation:F3} 新計算:{newCalculation:F3} 差:{(newCalculation - oldCalculation):F3}拍");
+            }
+            
+            return newCalculation;
+        }
+        else
+        {
+            // フォールバック: 4拍子として計算
+            return (measure - 1) * 4f + beat;
+        }
     }
     public string GetPositionString()
     {

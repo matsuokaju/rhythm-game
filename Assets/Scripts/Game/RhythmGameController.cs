@@ -95,6 +95,7 @@ public class RhythmGameController : MonoBehaviour
             // 各システムの更新
             chartManager?.UpdateCurrentTimingInfo(songTime);
             noteManager?.CheckAndSpawnNotes(songTime);
+            noteManager?.CheckAndSpawnMeasureLines(songTime);
             noteManager?.CheckNotePositions(songTime);
             judgmentSystem?.CheckMissedNotes(songTime);
         }

@@ -135,6 +135,10 @@ public class GameUI : MonoBehaviour
     {
         float emptyMeasureTime = chartManager.GetEmptyMeasureTime();
         float adjustedTime = gameController.SongTime - emptyMeasureTime;
+        
+        // noteTimingOffsetを適用（ノーツタイミングに合わせて表示をずらす）
+        float noteTimingOffset = noteManager?.noteTimingOffset ?? 0f;
+        adjustedTime += noteTimingOffset;
 
         if (adjustedTime >= 0)
         {
@@ -146,7 +150,8 @@ public class GameUI : MonoBehaviour
             float displayBeat = (currentBeatsFromStart % currentBeatsPerMeasure) * (chartManager.CurrentTimeSignature[1] / 4f);
 
             // ★ Y座標を220に調整（ホールド判定表示分のスペースを確保）
-            GUI.Label(new Rect(10, 220, 300, 30), $"Position: {displayMeasure}小節{displayBeat + 1:F2}拍", style);
+            string offsetInfo = noteTimingOffset != 0f ? $" (offset: {noteTimingOffset:+0.000;-0.000}s)" : "";
+            GUI.Label(new Rect(10, 220, 400, 30), $"Position: {displayMeasure}小節{displayBeat:F2}拍{offsetInfo}", style);
         }
         else
         {
